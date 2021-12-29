@@ -6,7 +6,7 @@
 /*   By: namenega <namenega@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/29 12:57:28 by namenega          #+#    #+#             */
-/*   Updated: 2021/12/29 15:54:37 by namenega         ###   ########.fr       */
+/*   Updated: 2021/12/29 17:40:44 by namenega         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 # define ITERATOR_HPP
 
 # include <iostream>
+# include <cstddef> //ptrdiff_t
 
 namespace ft {
 	/* ********************************************************************** */
@@ -207,6 +208,98 @@ namespace ft {
 					const ft::reverse_iterator< Iterator >& rhs) {
 		return (lhs.base() <= rhs.base());
 	}
+
+
+	/* ********************************************************************** */
+	/* *************************** Vector Iterator ************************** */
+	/* ********************************************************************** */
+
+	template< class T >
+	class	vec_iter {
+		public:
+			/* ************************ Member Types ************************ */
+			typedef typename ft::iterator_traits< T* >::iterator_category	iterator_category;
+			typedef typename ft::iterator_traits< T* >::value_type			value_type;
+			typedef typename ft::iterator_traits< T* >::difference_type		difference_type;
+			typedef typename ft::iterator_traits< T* >::pointer				pointer;
+			typedef typename ft::iterator_traits< T* >::reference			reference;
+
+			/* ************************ Constructors ************************ */
+			/*	 Default */
+			vec_iter(pointer ptr = nullptr) : _node(ptr) {
+			}
+			/*	Copy */
+			template< class V >
+			vec_iter(const vec_iter< V >& x) : _node(x.base()) {
+			}
+			/*	Destructor */
+			~vec_iter() {
+				_node = nullptr;
+			}
+
+			/* ********************** Base & Operators ********************** */
+			/*	Base */
+			pointer	base() const {
+				return (this->_node);
+			}
+			/*	Operator* */
+			reference	operator*() const {
+				return (*this->_node);
+			}
+			/*	Operator+ */
+			vec_iter	operator+(difference_type n) const {
+				vec_iter	tmp = *this;
+				return (tmp += n);
+			}
+			/*	Operator++ */
+			vec_iter&	operator++() {
+				this->node++;
+				return (*this);
+			}
+
+			vec_iter	operator++(int) {
+				vec_iter	tmp = *this;
+				++(*this);
+				return (tmp);
+			}
+			/*	Operator+= */
+			vec_iter&	operator+=(difference_type n) {
+				this->_node += n;
+				return (*this);
+			}
+			/*	Operator- */
+			vec_iter	operator-(difference_type n) const {
+				vec_iter	tmp = *this;
+				return (tmp -= n);
+			}
+			/*	Operator-- */
+			vec_iter&	operator--() {
+				this->_node--;
+				return (*this);
+			}
+
+			vec_iter	operator--(int) {
+				vec_iter	tmp = *this;
+				--(*this);
+				return (tmp);
+			}
+			/*	Operator-= */
+			vec_iter&	operator-=(difference_type n) {
+				this->_node -= n;
+				return (*this);
+			}
+			/*	Operator-> */
+			pointer	operator->() const {
+				return (this->_node);
+			}
+			/*	Operator[] */
+			reference	operator[](difference_type n) const {
+				return *(this->_node + n);
+			}
+
+		private:
+			pointer	_node;
+	};
 };
 
 #endif
