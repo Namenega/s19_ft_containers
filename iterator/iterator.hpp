@@ -6,7 +6,7 @@
 /*   By: namenega <namenega@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/29 12:57:28 by namenega          #+#    #+#             */
-/*   Updated: 2021/12/29 17:40:44 by namenega         ###   ########.fr       */
+/*   Updated: 2021/12/30 11:28:52 by namenega         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -215,7 +215,7 @@ namespace ft {
 	/* ********************************************************************** */
 
 	template< class T >
-	class	vec_iter {
+	class	vector_iterator {
 		public:
 			/* ************************ Member Types ************************ */
 			typedef typename ft::iterator_traits< T* >::iterator_category	iterator_category;
@@ -226,73 +226,73 @@ namespace ft {
 
 			/* ************************ Constructors ************************ */
 			/*	 Default */
-			vec_iter(pointer ptr = nullptr) : _node(ptr) {
+			vector_iterator(pointer ptr = nullptr) : _node(ptr) {
 			}
 			/*	Copy */
 			template< class V >
-			vec_iter(const vec_iter< V >& x) : _node(x.base()) {
+			vector_iterator(const vector_iterator< V >& x) : _node(x.base()) {
 			}
 			/*	Destructor */
-			~vec_iter() {
+			~vector_iterator() {
 				_node = nullptr;
 			}
 
 			/* ********************** Base & Operators ********************** */
-			/*	Base */
+			/*	Base - returns base iterator */
 			pointer	base() const {
 				return (this->_node);
 			}
-			/*	Operator* */
+			/*	Operator* - Dereference iterator */
 			reference	operator*() const {
 				return (*this->_node);
 			}
-			/*	Operator+ */
-			vec_iter	operator+(difference_type n) const {
-				vec_iter	tmp = *this;
+			/*	Operator+ - Addition operator */
+			vector_iterator	operator+(difference_type n) const {
+				vector_iterator	tmp = *this;
 				return (tmp += n);
 			}
-			/*	Operator++ */
-			vec_iter&	operator++() {
+			/*	Operator++ - Increment iterator position */
+			vector_iterator&	operator++() {
 				this->node++;
 				return (*this);
 			}
 
-			vec_iter	operator++(int) {
-				vec_iter	tmp = *this;
+			vector_iterator	operator++(int) {
+				vector_iterator	tmp = *this;
 				++(*this);
 				return (tmp);
 			}
-			/*	Operator+= */
-			vec_iter&	operator+=(difference_type n) {
+			/*	Operator+= - Advance iterator */
+			vector_iterator&	operator+=(difference_type n) {
 				this->_node += n;
 				return (*this);
 			}
-			/*	Operator- */
-			vec_iter	operator-(difference_type n) const {
-				vec_iter	tmp = *this;
+			/*	Operator- - Substraction iterator */
+			vector_iterator	operator-(difference_type n) const {
+				vector_iterator	tmp = *this;
 				return (tmp -= n);
 			}
-			/*	Operator-- */
-			vec_iter&	operator--() {
+			/*	Operator-- - Decrease iterator opinion */
+			vector_iterator&	operator--() {
 				this->_node--;
 				return (*this);
 			}
 
-			vec_iter	operator--(int) {
-				vec_iter	tmp = *this;
+			vector_iterator	operator--(int) {
+				vector_iterator	tmp = *this;
 				--(*this);
 				return (tmp);
 			}
-			/*	Operator-= */
-			vec_iter&	operator-=(difference_type n) {
+			/*	Operator-= - Retrocede iterator */
+			vector_iterator&	operator-=(difference_type n) {
 				this->_node -= n;
 				return (*this);
 			}
-			/*	Operator-> */
+			/*	Operator-> - Dereference iterator */
 			pointer	operator->() const {
 				return (this->_node);
 			}
-			/*	Operator[] */
+			/*	Operator[] - Dereference iterator with offset */
 			reference	operator[](difference_type n) const {
 				return *(this->_node + n);
 			}

@@ -6,7 +6,7 @@
 /*   By: namenega <namenega@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/24 12:45:40 by namenega          #+#    #+#             */
-/*   Updated: 2021/12/29 17:00:36 by namenega         ###   ########.fr       */
+/*   Updated: 2021/12/30 18:48:51 by namenega         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 # define VECTOR_HPP
 
 # include <memory>
+# include "../iterator/iterator.hpp"
 
 namespace ft {
 	template< class T, class Alloc = std::allocator<T> >
@@ -26,13 +27,19 @@ namespace ft {
 
 		public:
 			/* ************************** Typedef *************************** */
-			typedef				T								value_type;
-			typedef				Alloc							allocator_type;
-			typedef				size_t							size_type;
-			typedef typename	allocator_type::reference		reference;
-			typedef typename	allocator_type::const_reference	const_reference;
-			typedef typename	allocator_type::pointer			pointer;
-			typedef typename	allocator_type::const_pointer	const_pointer;
+			typedef				T													value_type;
+			typedef				Alloc												allocator_type;
+			typedef				size_t												size_type;
+			typedef typename	allocator_type::reference							reference;
+			typedef typename	allocator_type::const_reference						const_reference;
+			typedef typename	allocator_type::pointer								pointer;
+			typedef typename	allocator_type::const_pointer						const_pointer;
+
+			typedef				ft::vector_iterator< value_type >					iterator;
+			typedef				ft::vector_iterator< const value_type >				const_iterator;
+			typedef				ft::reverse_iterator< iterator >					reverse_iterator;
+			typedef				ft::reverse_iterator< const_iterator >				const_reverse_iterator;
+			typedef typename	ft::iterator_traits< iterator >::difference_type	difference_type;
 
 			/* ************************************************************** */
 			/* ****************** Constructors, Destructors ***************** */
@@ -40,15 +47,21 @@ namespace ft {
 
 			/* ************************** Default *************************** */
 			/*	Constructs an empty container, with no elements */
-			explicit	vector(const allocator_type& alloc = allocator_type()) {
-
+			explicit	vector(const allocator_type& alloc = allocator_type()) :
+			_size(0), _capacity(0), _base(alloc) {
+				this->_ptr = this->_base.allocate(0);
 			}
 
 			/* **************************** Fill **************************** */
 			/*	Constructs a container with n elements.
 				Each element is a copy of val */
-			explicit	vector(size_t n, const value_type& val = value_type()) {
-
+			explicit	vector(size_t n, const value_type& val = value_type(),
+							const allocator_type& alloc = allocator_type()) :
+			_size(n), _capacity(n), _base(alloc) {
+				this->_ptr = this->_base.allocate(n);
+				for (size_t i; i < n; i++) {
+					this->_base.construct(this->_ptr + i, val);
+				}
 			}
 
 			/* *************************** Range **************************** */
@@ -56,8 +69,18 @@ namespace ft {
 				[first, last] with each element constructed from
 				its corresponding in that range, in the same order. */
 			template < class InputIterator >
-			vector (InputIterator first, InputIterator last, const allocator_type& alloc = allocator_type()) {
-
+			vector (InputIterator first, InputIterator last, const allocator_type& alloc = allocator_type(),
+				typename ft::enable_if< !ft::is_integral< InputIterator >::value,
+				InputIterator>::type* = nullptr) :
+			_size(0), _capacity(0), _base(alloc) {
+				while (first < last) {
+					this->_size++;
+					first++;
+				}
+				this->_capacity = this->_size;
+				this->_ptr = this->_base.allocate(this->_size);
+				for (size_t i = 0; i < this->_size; i++)
+					this->_base.construct(this->_ptr + i, *(first + i));
 			}
 
 			/* **************************** Copy **************************** */
