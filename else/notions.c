@@ -6,7 +6,7 @@
 /*   By: namenega <namenega@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/29 13:04:17 by namenega          #+#    #+#             */
-/*   Updated: 2021/12/30 18:00:22 by namenega         ###   ########.fr       */
+/*   Updated: 2022/01/01 16:08:40 by namenega         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,7 @@
 /* ************************** ITERATOR/ITERATOR.HPP ************************* */
 /* ************************************************************************** */
 
-/* ptrdiff_t */
+/*	ptrdiff_t */
 /*	It is the signed integer type of the result of subtracting two pointers
 	The bit width is not less than 17.
 	It is used for pointer arithmetic and array indexing, if negative values
@@ -52,13 +52,21 @@
 	iterators is the member 'typedef difference_type'.
 	https://en.cppreference.com/w/cpp/types/ptrdiff_t */
 
+/*	iterator_traits */
+/*	 */
 
 
 /* ************************************************************************** */
 /* **************************** VECTOR/VECTOR.HPP *************************** */
 /* ************************************************************************** */
 
-/*	A vector is a sequence container that encapsulates dynamic size arrays. */
+/*	A vector is a sequence container that encapsulates dynamic size arrays.
+	If we reach the size of the array and want to put more data in it, it will
+	expand the size by finding memory larger than the occupied size. It will
+	copy the entire content on the larger space memory. If there is a pointer on
+	an existing element and the content is copied somewhere else, the pointer
+	will be completely invalid.
+	Arrays have contiguous data (l'une a coté de l'autre) */
 
 /* ***************************** std::allocator ***************************** */
 /*	allocate() */

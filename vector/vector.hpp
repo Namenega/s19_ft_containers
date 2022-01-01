@@ -6,7 +6,7 @@
 /*   By: namenega <namenega@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/24 12:45:40 by namenega          #+#    #+#             */
-/*   Updated: 2021/12/30 18:48:51 by namenega         ###   ########.fr       */
+/*   Updated: 2022/01/01 17:13:47 by namenega         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,8 +86,10 @@ namespace ft {
 			/* **************************** Copy **************************** */
 			/*	Constructs a container with a copy of each of the elements
 				in x, in the same order */
-			vector (const vector & x) {
-
+			vector (const vector & x) :
+			_size(x._size), _capacity(x._capacity), _base(x._base) {
+				this->_ptr = this->_base.allocate(0);
+				*this = x;
 			}
 
 			/* ************************* Destructor ************************* */
@@ -95,7 +97,8 @@ namespace ft {
 				all the storage capacity allocated by the vector using
 				its allocator */
 			virtual ~vector() {
-
+				this->clear();
+				this->_base.deallocate(this->_ptr, this->_capacity);
 			}
 
 			/* ************************** Operator= ************************* */
@@ -103,7 +106,16 @@ namespace ft {
 				The container preserves its current allocator, which is used
 				to allocate storage in case of reallocation. */
 			vector&		operator=(const vector & x) {
-
+				if (this != &x) {
+					this->clear();
+					this->_base.deallocate(this->_ptr, this->_capacity);
+					this->_ptr = this->_base.allocate(x._capacity);
+					for (size_t i = 0; i < x._size; i++)
+						this->_base.construct(this->_ptr + i, *(x._ptr + i));
+					this->_size = x._size;
+					this->_capacity = x._capacity;
+				}
+				return (*this);
 			}
 
 
@@ -120,7 +132,7 @@ namespace ft {
 			}
 
 			const_iterator	begin() const {
-
+				return (const_iterator(this->_ptr));
 			}
 
 			/* **************************** End() *************************** */
@@ -132,11 +144,11 @@ namespace ft {
 				If the container is empty, the function returns the same
 				as vector::begin(). */
 			iterator	end() {
-
+				return (iterator(this->_ptr + this->_size))
 			}
 
 			const_iterator	end() const {
-
+				return (const_iterator(this->_ptr + this->_size))
 			}
 
 			/* ************************** Rbegin() ************************** */
@@ -144,22 +156,22 @@ namespace ft {
 				in the vector right before the one pointed by end().
 				It iterates backwards. */
 			reverse_iterator	rbegin() {
-				
+				return (reverse_iterator(this->_ptr + this->_size));
 			}
 
 			const_reverse_iterator	rbegin() const {
-
+				return (const_reverse_iterator(this->_ptr + this->_size));
 			}
 
 			/* *************************** Rend() *************************** */
 			/*	Returns a reverse iterator pointing to the theoretical element
 				preceding the first element in the vector. */
 			reverse_iterator	rend() {
-
+				return (reverse_iterator(this->_ptr));
 			}
 
 			const_reverse_iterator	rend() const {
-
+				return (const_reverse_iterator(this->_ptr));
 			}
 
 			
@@ -171,7 +183,7 @@ namespace ft {
 			/*	Returns the number of elements in the vector (which is not
 				necessarily equal to its storage capacity!) */
 			size_type	size() const {
-
+				return (this->_size);
 			}
 
 			/* ************************* MaxSize() ************************** */
@@ -180,22 +192,37 @@ namespace ft {
 				can reach due to known systeem or library implementation
 				limitations. */
 			size_type	max_size() const {
-
+				return (this->_base.max_size());
 			}
 
 			/* ************************** Resize() ************************** */
 			/*	Resizes the container so that it contains n elements.
-				If n is smaller than the current size, the content is reduced
+				1. If n is smaller than the current size, the content is reduced
 				to its first n elements, removing those beyond (+ destroy).
-				If n is greater than current container size, the content
+				2. If n is greater than current container size, the content
 				is expanded by inserting at the end as many elements
 				as needed to reach a size of n.
 				If val is specified, the new elements are initialized
 				as copies of val.
-				If n is also greater than CAPACITY, an automatic reallocation
+				3. If n is also greater than CAPACITY, an automatic reallocation
 				of the allocated storage space takes place. */
 			void	resize(size_type n, value_type val = value_type()) {
-
+				if (n < this->_size) {
+					for (size_t i = n; i < this->_size; i++)
+						this->_base.destroy(this->_ptr + i);
+				}
+				else if (n > this->_size && n <= this->_capacity) {
+					for (size_t i = this->_size; i < n; i++)
+						this->_base.construct(this->_ptr + i, val);
+				}
+				else if (n > this->_size && n > this->_capacity) {
+					if (n < this->_capacity * 2)
+						reserve(this->_capacity * 2);
+					else
+						reserve(n);
+					for (size_t i = this->_size; i < n; i++)
+						this->_base.construct(this->_ptr + i, val);
+				}
 			}
 
 			/* ************************* Capacity() ************************* */
@@ -203,13 +230,15 @@ namespace ft {
 				for the vector, expressed in terms of elements. It can be
 				equal or greater than the vector SIZE*/
 			__SIZE_TYPE__	capacity() const {
-
+				return (this->_capacity);
 			}
 
 			/* *************************** Empty() ************************** */
 			/*	Returns whether the vector is empty or not. */
 			bool	empty() const {
-
+				if (this->_size == 0)
+					return (true);
+				return (false);
 			}
 
 			/* ************************** Reserve() ************************* */
@@ -219,7 +248,18 @@ namespace ft {
 				its storage increasing its capacity to n (or greater).
 				No effect on the vector size/elements. */
 			void	reserve(size_type n) {
+				if (n > this->_capacity) {
+					vector	tmp;
 
+					tmp = *this;
+					this->clear();
+					this->_base.deallocate(this->_ptr, this->_capacity);
+					this->_ptr = this->_base.allocate(n);
+					for (size_t i = 0; i < tmp._size; i++)
+						this->_base.construct(this->_ptr + i, *(tmp._ptr + i));
+					this->_size = tmp._size;
+					this->_capacity = n;
+				}
 			}
 
 
@@ -233,11 +273,11 @@ namespace ft {
 				signals if the request position is out of range
 				by throwing an exception. */
 			reference	operator[](size_type n) {
-
+				return (this->_ptr[n]);
 			}
 
 			const_reference	operator[](size_type n) const {
-				
+				return (this->_ptr[n]);
 			}
 
 			/* **************************** At() **************************** */
@@ -246,11 +286,15 @@ namespace ft {
 				valid elements in the vector, throwing an out_of_range
 				exception if not. */
 			reference	at(size_type n) {
-
+				if (n >= this->_size)
+					throw std::out_of_range("Vector at().");
+				return (*(this->_ptr[n]));
 			}
 
 			const_reference	at(size_type n) const {
-
+				if (n >= this->_size)
+					throw std::out_of_range("Vector const at().");
+				return (*(this->_ptr[n]));
 			}
 
 			/* ************************** Front() *************************** */
@@ -259,11 +303,11 @@ namespace ft {
 				this function returns a direct reference. Calling on an empty
 				container causes undefined behaviour. */
 			reference	front() {
-
+				return (*this->_ptr);
 			}
 
 			const_reference	front() const {
-
+				return (*this->_ptr);
 			}
 
 			/* *************************** Back() *************************** */
@@ -272,11 +316,11 @@ namespace ft {
 				this function returns a direct reference. Calling on an empty
 				container causes undefined behaviour. */
 			reference	back() {
-
+				return (*(this->_ptr + this->_size - 1));
 			}
 
 			const_reference	back() const {
-
+				return (*(this->_ptr + this->_size - 1));
 			}
 
 
@@ -286,7 +330,7 @@ namespace ft {
 
 			/* ************************** Assign() ************************** */
 			/*	Assign new contents to the vector, replacing its current
-				contents and modifying its size accordingly.  Any elements held
+				contents and modifying its size accordingly. Any elements held
 				in the container before the call are destroyed and replaced
 				by newly constructed elements. This causes an reallocation of
 				the allocated storage space if the new vector size
@@ -295,14 +339,20 @@ namespace ft {
 				the elements on the range between first and last,
 				in the same order. */
 			template< class InputIterator >
-			void	assign(InputIterator first, InputIterator last) {
-
+			void	assign(InputIterator first, InputIterator last,
+					typename ft::enable_if< !ft::is_integral< InputIterator >::value,
+					InputIterator>::type* = nullptr) {
+				this->clear();
+				this->insert(begin(), first, last);
+				this->_capacity = this->_size;
 			}
 
 			/*	Fill - The new contents are n elements, each initialized to
 				a copy of val. */
 			void	assign(size_type n, const value_type& val) {
-
+				this->clear();
+				for  (size_t i = 0; i < n; i++)
+					push_back(val);
 			}
 
 			/* ************************* Push_back() ************************ */
@@ -312,14 +362,14 @@ namespace ft {
 				by 1, which causes a reallocation of the allocated storage space
 				if the new vector size surpasses the current vector capacity. */
 			void	push_back(const value_type& val) {
-
+				resize(this->_size + 1, val);
 			}
 
 			/* ************************* Pop_back() ************************* */
 			/*	Removes the last element in the vector, effectively reducing
 				the container size by 1. This destroys the removed element. */
 			void	pop_back() {
-
+				resize(this->size - 1, value_type());
 			}
 
 			/* ************************** Insert() ************************** */
@@ -330,7 +380,7 @@ namespace ft {
 				the new vector size surpasses the current vector capacity. */
 			/*	Single element */
 			iterator	insert(iterator position, const value_type& val) {
-
+				
 			}
 
 			/*	Fill */
