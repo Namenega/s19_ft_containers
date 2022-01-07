@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   vector.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: namenega <namenega@student.s19.be>         +#+  +:+       +#+        */
+/*   By: namenega <namenega@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/24 12:45:40 by namenega          #+#    #+#             */
-/*   Updated: 2022/01/01 17:13:47 by namenega         ###   ########.fr       */
+/*   Updated: 2022/01/07 15:33:55 by namenega         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,15 +15,16 @@
 
 # include <memory>
 # include "../iterator/iterator.hpp"
+# include "../utils/utils.hpp"
 
 namespace ft {
 	template< class T, class Alloc = std::allocator<T> >
 	class vector {
-		private:
-			size_type		_size; //size_type = long unsigned int
-			size_type		_capacity;
-			pointer			_ptr;
-			allocator_type	_base;
+		// private:
+		// 	size_type		_size; //size_type = long unsigned int
+		// 	size_type		_capacity;
+		// 	pointer			_ptr;
+		// 	allocator_type	_base;
 
 		public:
 			/* ************************** Typedef *************************** */
@@ -144,11 +145,11 @@ namespace ft {
 				If the container is empty, the function returns the same
 				as vector::begin(). */
 			iterator	end() {
-				return (iterator(this->_ptr + this->_size))
+				return (iterator(this->_ptr + this->_size));
 			}
 
 			const_iterator	end() const {
-				return (const_iterator(this->_ptr + this->_size))
+				return (const_iterator(this->_ptr + this->_size));
 			}
 
 			/* ************************** Rbegin() ************************** */
@@ -384,28 +385,28 @@ namespace ft {
 			}
 
 			/*	Fill */
-			void	insert(iterator position, size_type n, const value_type& val) {
+			// void	insert(iterator position, size_type n, const value_type& val) {
 
-			}
+			// }
 
 			/*	Range */
-			template< class InputIterator >
-			void	insert(iterator position, InputIterator first, InputIterator last) {
+			// template< class InputIterator >
+			// void	insert(iterator position, InputIterator first, InputIterator last) {
 				
-			}
+			// }
 			
 			/* ************************** Erase() *************************** */
 			/*	Removes from the vector a single element (position). This
 				effectively reduces the container size by the number of
 				the elements removed, which are destroyed. */
-			iterator	erase(iterator position) {
+			// iterator	erase(iterator position) {
 
-			}
+			// }
 
 			/*	Removes from the vector a range of elements ([first, last]). */
-			iterator	erase(iterator first, iterator last) {
+			// iterator	erase(iterator first, iterator last) {
 
-			}
+			// }
 
 			/* *************************** Swap() *************************** */
 			/*	Exchange the content of the container vy the content of x,
@@ -413,17 +414,17 @@ namespace ft {
 				Sizes may differ. After the call, the elements in this
 				container are those which were in x before, and the elements
 				of x are those which where in this. (clear+realloc)*/
-			void	swap(vector& x) {
+			// void	swap(vector& x) {
 
-			}
+			// }
 
 			/* ************************** Clear() *************************** */
 			/*	Removes all elements from the vector (which are destroyed),
 				leaving the container with a size of 0.
 				No reallocation, no change of capacity */
-			void	clear() {
+			// void	clear() {
 
-			}
+			// }
 
 
 			/* ************************************************************** */
@@ -433,9 +434,14 @@ namespace ft {
 			/* *********************** Get_allocator() ********************** */
 			/*	Returns a copy of the allocator object associated with
 				the vector. */
-			allocator_type	get_allocator() const {
+			// allocator_type	get_allocator() const {
 
-			}
+			// }
+		private:
+			size_type		_size; //size_type = long unsigned int
+			size_type		_capacity;
+			pointer			_ptr;
+			allocator_type	_base;
 	};
 
 
@@ -449,56 +455,56 @@ namespace ft {
 		with elements in rhs at the same position.
 		Return true if they are equal. */
 
-	template< class T, class Alloc >
-	bool	operator==(	const vector< T, Alloc >& lhs,
-						const vector< T, Alloc >& rhs) {
+	// template< class T, class Alloc >
+	// bool	operator==(	const vector< T, Alloc >& lhs,
+	// 					const vector< T, Alloc >& rhs) {
 
-	}
+	// }
 
 	/* **************************** Operator!=() **************************** */
 	/*	Check if the content of lhs and rhs are different.
 		Return true if they are not equal. */
-	template< class T, class Alloc >
-	bool	operator!=(	const vector< T, Alloc >& lhs,
-						const vector< T, Alloc >& rhs) {
+	// template< class T, class Alloc >
+	// bool	operator!=(	const vector< T, Alloc >& lhs,
+	// 					const vector< T, Alloc >& rhs) {
 
-	}
+	// }
 
 	/* **************************** Operator<() ***************************** */
 	/*	Compares the content of lhs and rhs lexicographically.
 		Returns true if lhs < rhs */
-	template< class T, class Alloc >
-	bool	operator<(	const vector< T, Alloc >& lhs,
-						const vector< T, Alloc >& rhs) {
+	// template< class T, class Alloc >
+	// bool	operator<(	const vector< T, Alloc >& lhs,
+	// 					const vector< T, Alloc >& rhs) {
 
-	}
+	// }
 
 	/* **************************** Operator<=() **************************** */
 	/*	Compares the content of lhs and rhs lexicographically.
 		Returns true if lhs <= rhs */
-	template< class T, class Alloc >
-	bool	operator<=(	const vector< T, Alloc >& lhs,
-						const vector< T, Alloc >& rhs) {
+	// template< class T, class Alloc >
+	// bool	operator<=(	const vector< T, Alloc >& lhs,
+	// 					const vector< T, Alloc >& rhs) {
 
-	}
+	// }
 
 	/* **************************** Operator>() ***************************** */
 	/*	Compares the content of lhs and rhs lexicographically.
 		Returns true if lhs > rhs */
-	template< class T, class Alloc >
-	bool	operator>(	const vector< T, Alloc >& lhs,
-						const vector< T, Alloc >& rhs) {
+	// template< class T, class Alloc >
+	// bool	operator>(	const vector< T, Alloc >& lhs,
+	// 					const vector< T, Alloc >& rhs) {
 
-	}
+	// }
 
 	/* **************************** Operator>=() **************************** */
 	/*	Compares the content of lhs and rhs lexicographically.
 		Returns true if lhs >= rhs */
-	template< class T, class Alloc >
-	bool	operator>=(	const vector< T, Alloc >& lhs,
-						const vector< T, Alloc >& rhs) {
+	// template< class T, class Alloc >
+	// bool	operator>=(	const vector< T, Alloc >& lhs,
+	// 					const vector< T, Alloc >& rhs) {
 
-	}
+	// }
 
 
 	/* ********************************************************************** */
@@ -512,10 +518,10 @@ namespace ft {
 		its performance by mutually transferring ownership over their assets
 		to the other container.
 		Same as x.swap(y) */
-	template< class T, class Alloc >
-	void	swap(vector< T, Alloc >& x, vector< T, Alloc >& y) {
-		x.swap(y);
-	}
+	// template< class T, class Alloc >
+	// void	swap(vector< T, Alloc >& x, vector< T, Alloc >& y) {
+	// 	x.swap(y);
+	// }
 }
 
 

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   iterator.hpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: namenega <namenega@student.s19.be>         +#+  +:+       +#+        */
+/*   By: namenega <namenega@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/29 12:57:28 by namenega          #+#    #+#             */
-/*   Updated: 2021/12/30 11:28:52 by namenega         ###   ########.fr       */
+/*   Updated: 2022/01/07 15:30:38 by namenega         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 
 # include <iostream>
 # include <cstddef> //ptrdiff_t
+# include "../utils/utils.hpp"
 
 namespace ft {
 	/* ********************************************************************** */
@@ -157,7 +158,7 @@ namespace ft {
 			/*	Operator-= - Retrocede iterator */
 			reverse_iterator&	operator-=(difference_type n) {
 				this->current += n;
-				return (*this)
+				return (*this);
 			}
 			/*	Operator-> - Dereference iterator */
 			pointer				operator->() const {
