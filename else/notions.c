@@ -6,9 +6,12 @@
 /*   By: namenega <namenega@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/29 13:04:17 by namenega          #+#    #+#             */
-/*   Updated: 2022/01/01 16:08:40 by namenega         ###   ########.fr       */
+/*   Updated: 2022/01/02 13:45:00 by namenega         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
+/*	If doing the function inside the template, the function acquires the
+	implicit inline property. */
 
 /* ************************************************************************** */
 /* ***************************** UTILS/UTILS.HPP **************************** */

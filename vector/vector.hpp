@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   vector.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: namenega <namenega@student.42.fr>          +#+  +:+       +#+        */
+/*   By: namenega <namenega@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/24 12:45:40 by namenega          #+#    #+#             */
-/*   Updated: 2022/01/07 15:33:55 by namenega         ###   ########.fr       */
+/*   Updated: 2022/01/11 18:52:58 by namenega         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,12 +20,6 @@
 namespace ft {
 	template< class T, class Alloc = std::allocator<T> >
 	class vector {
-		// private:
-		// 	size_type		_size; //size_type = long unsigned int
-		// 	size_type		_capacity;
-		// 	pointer			_ptr;
-		// 	allocator_type	_base;
-
 		public:
 			/* ************************** Typedef *************************** */
 			typedef				T													value_type;
@@ -60,7 +54,7 @@ namespace ft {
 							const allocator_type& alloc = allocator_type()) :
 			_size(n), _capacity(n), _base(alloc) {
 				this->_ptr = this->_base.allocate(n);
-				for (size_t i; i < n; i++) {
+				for (size_t i = 0; i < n; i++) {
 					this->_base.construct(this->_ptr + i, val);
 				}
 			}
@@ -70,18 +64,21 @@ namespace ft {
 				[first, last] with each element constructed from
 				its corresponding in that range, in the same order. */
 			template < class InputIterator >
-			vector (InputIterator first, InputIterator last, const allocator_type& alloc = allocator_type(),
+			vector(InputIterator first, InputIterator last, const allocator_type& alloc = allocator_type(),
 				typename ft::enable_if< !ft::is_integral< InputIterator >::value,
 				InputIterator>::type* = nullptr) :
 			_size(0), _capacity(0), _base(alloc) {
 				while (first < last) {
-					this->_size++;
 					first++;
+					this->_size++;
 				}
+				// for(;first < last; first++)
+				// 	this->_size++;
 				this->_capacity = this->_size;
+				first -= _size;
 				this->_ptr = this->_base.allocate(this->_size);
 				for (size_t i = 0; i < this->_size; i++)
-					this->_base.construct(this->_ptr + i, *(first + i));
+					this->_base.construct(_ptr + i, *(first + i));
 			}
 
 			/* **************************** Copy **************************** */
@@ -106,7 +103,7 @@ namespace ft {
 			/*	Copies all the elements from x into the container.
 				The container preserves its current allocator, which is used
 				to allocate storage in case of reallocation. */
-			vector&		operator=(const vector & x) {
+			vector &	operator=(const vector & x) {
 				if (this != &x) {
 					this->clear();
 					this->_base.deallocate(this->_ptr, this->_capacity);
@@ -224,6 +221,7 @@ namespace ft {
 					for (size_t i = this->_size; i < n; i++)
 						this->_base.construct(this->_ptr + i, val);
 				}
+				this->_size = n;
 			}
 
 			/* ************************* Capacity() ************************* */
@@ -370,7 +368,7 @@ namespace ft {
 			/*	Removes the last element in the vector, effectively reducing
 				the container size by 1. This destroys the removed element. */
 			void	pop_back() {
-				resize(this->size - 1, value_type());
+				resize(this->_size - 1, value_type());
 			}
 
 			/* ************************** Insert() ************************** */
@@ -381,19 +379,46 @@ namespace ft {
 				the new vector size surpasses the current vector capacity. */
 			/*	Single element */
 			iterator	insert(iterator position, const value_type& val) {
-				
+				size_t		n = 0;
+				iterator	it;
+
+				for (it = this->begin(); it < position; it++)
+					n++;
+				this->reserve(this->_size + 1);
+				this->_size += 1;
+				size_t i = this->_size - 1;
+				while (i > n) {
+					this->_ptr[i] = this->_ptr[i - 1];
+					i--;
+				}
+				this->_ptr[n] = val;
+				return (begin() + n);
 			}
 
 			/*	Fill */
-			// void	insert(iterator position, size_type n, const value_type& val) {
+			void	insert(iterator position, size_type n, const value_type& val) {
+				iterator	it = position;
 
-			// }
+				for (size_t i = 0; i < n; i++) {
+					it = insert(it, val);
+					it++;
+				}
+			}
 
 			/*	Range */
-			// template< class InputIterator >
-			// void	insert(iterator position, InputIterator first, InputIterator last) {
+			template< class InputIterator >
+			void	insert(iterator position, InputIterator first, InputIterator last,
+						typename ft::enable_if<!ft::is_integral<InputIterator>::value,
+						InputIterator>::type* = nullptr) {
+				vector		tmp(first, last);
+				iterator	begin = tmp.begin();
+				iterator	end = tmp.end();
 				
-			// }
+				for (iterator it = position; begin < end; begin++) {
+					it = insert(it, *begin);
+					it++;
+				}
+			}
 			
 			/* ************************** Erase() *************************** */
 			/*	Removes from the vector a single element (position). This
@@ -422,9 +447,11 @@ namespace ft {
 			/*	Removes all elements from the vector (which are destroyed),
 				leaving the container with a size of 0.
 				No reallocation, no change of capacity */
-			// void	clear() {
-
-			// }
+			void	clear() {
+				for (size_t i = 0; i < this->_size; i++)
+					this->_base.destroy(&this->_ptr[i]);
+				this->_size = 0;
+			}
 
 
 			/* ************************************************************** */
@@ -464,11 +491,11 @@ namespace ft {
 	/* **************************** Operator!=() **************************** */
 	/*	Check if the content of lhs and rhs are different.
 		Return true if they are not equal. */
-	// template< class T, class Alloc >
-	// bool	operator!=(	const vector< T, Alloc >& lhs,
-	// 					const vector< T, Alloc >& rhs) {
-
-	// }
+	template< class T, class Alloc >
+	bool	operator!=(	const vector< T, Alloc >& lhs,
+						const vector< T, Alloc >& rhs) {
+		return (!(lhs == rhs));
+	}
 
 	/* **************************** Operator<() ***************************** */
 	/*	Compares the content of lhs and rhs lexicographically.
@@ -523,6 +550,14 @@ namespace ft {
 	// 	x.swap(y);
 	// }
 }
+
+void	vector_testing();
+void	vector_operator_test();
+void	vector_begin_test(void);
+void	vector_end_test(void);
+void	vector_rbegin_test(void);
+void	vector_rend_test(void);
+
 
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: namenega <namenega@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/30 15:32:37 by namenega          #+#    #+#             */
-/*   Updated: 2021/12/30 18:23:14 by namenega         ###   ########.fr       */
+/*   Updated: 2022/01/11 14:41:02 by namenega         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,33 @@
 # include <type_traits>
 
 namespace ft {
+	/* ****************************** NULLPTR_T ***************************** */
+	static class	nullptr_t {
+		public:
+			template< class T >
+			operator	T*() const {
+				return (0);
+			}
+			template< class U, class T >
+			operator	T U::*() const {
+				return (0);
+			}
+		private:
+			void	operator&() const;
+	}				u_nullptr = {};
+
+	/* ************************* INPUTITERATOR EQUAL ************************ */
+	template< class II1, class II2 >
+	bool	equal(II1 first1, II1 last1, II2 first2) {
+		while (first1 != last1) {
+			if (!(*first1 == *first2))
+				return (false);
+			++first1;
+			++first2;
+		}
+		return (true);
+	}
+
 	/* ********************************************************************** */
 	/* ****************************** ENABLE_IF ***************************** */
 	/* ********************************************************************** */

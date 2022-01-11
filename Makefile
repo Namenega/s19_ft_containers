@@ -1,4 +1,5 @@
-SRCNAME 	=	main.cpp
+SRCNAME 	=	main.cpp					\
+				./vector/vector_testing.cpp
 
 SRCS 		= ${SRCNAME}
 

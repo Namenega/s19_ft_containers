@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   iterator.hpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: namenega <namenega@student.42.fr>          +#+  +:+       +#+        */
+/*   By: namenega <namenega@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/29 12:57:28 by namenega          #+#    #+#             */
-/*   Updated: 2022/01/07 15:30:38 by namenega         ###   ########.fr       */
+/*   Updated: 2022/01/11 15:05:48 by namenega         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,20 +22,6 @@ namespace ft {
 	/* ******************** Class Template std::iterator ******************** */
 	/* ********************************************************************** */
 
-	/*	Base class template that can be used to derive iterator classes from it.
-		It is not an iterator class and does not provide any of the
-		functionnality an iterator is expected to have. It only provides some
-		member types. Needed for the default iterator_traits class template */
-	template< class Category, class T, class Distance = ptrdiff_t,
-				class Pointer = T*, class Reference = T& >
-	class	iterator {
-		typedef	T			value_type;
-		typedef	Distance	difference_type;
-		typedef	Pointer		pointer;
-		typedef	Reference	reference;
-		typedef Category	iterator_category;
-	};
-
 	/*	From class Category */
 	/* 	Empty classes to identify the category of an iterator as : */
 	struct	input_iterator_tag {}; /* an input_iterator */
@@ -44,6 +30,20 @@ namespace ft {
 	struct	bidirectional_iterator_tag : public forward_iterator_tag {}; /* a bidirectional iterator */
 	struct	random_access_iterator_tag : public bidirectional_iterator_tag {}; /* a random_access iterator */
 
+
+	/*	Base class template that can be used to derive iterator classes from it.
+		It is not an iterator class and does not provide any of the
+		functionnality an iterator is expected to have. It only provides some
+		member types. Needed for the default iterator_traits class template */
+	template< class Category, class T, class Distance = ptrdiff_t,
+				class Pointer = T*, class Reference = T& >
+	struct	iterator {
+		typedef	T			value_type;
+		typedef	Distance	difference_type;
+		typedef	Pointer		pointer;
+		typedef	Reference	reference;
+		typedef Category	iterator_category;
+	};
 	
 	/* ********************************************************************** */
 	/* ***************** Class Template std::iterator_traits **************** */
@@ -54,7 +54,7 @@ namespace ft {
 		to them and the range they represent by using the members of the
 		corresponding iterator_traits instantiation. */
 	template< class Iterator >
-	class	iterator_traits {
+	struct	iterator_traits {
 		typedef typename	Iterator::difference_type	difference_type;
 		typedef typename	Iterator::value_type		value_type;
 		typedef typename	Iterator::pointer			pointer;
@@ -63,7 +63,7 @@ namespace ft {
 	};
 
 	template< class T >
-	class	iterator_traits< T* > {
+	struct	iterator_traits< T* > {
 		typedef ptrdiff_t						difference_type;
 		typedef T								value_type;
 		typedef T*								pointer;
@@ -72,7 +72,7 @@ namespace ft {
 	};
 
 	template< class T >
-	class	iterator_traits< const T* > {
+	struct	iterator_traits< const T* > {
 		typedef	ptrdiff_t						difference_type;
 		typedef	T								value_type;
 		typedef const T*						pointer;
@@ -227,12 +227,10 @@ namespace ft {
 
 			/* ************************ Constructors ************************ */
 			/*	 Default */
-			vector_iterator(pointer ptr = nullptr) : _node(ptr) {
-			}
+			vector_iterator(pointer ptr = nullptr) : _node(ptr) {}
 			/*	Copy */
 			template< class V >
-			vector_iterator(const vector_iterator< V >& x) : _node(x.base()) {
-			}
+			vector_iterator(const vector_iterator<V>& x) : _node(x.base()) {}
 			/*	Destructor */
 			~vector_iterator() {
 				_node = nullptr;
@@ -254,7 +252,7 @@ namespace ft {
 			}
 			/*	Operator++ - Increment iterator position */
 			vector_iterator&	operator++() {
-				this->node++;
+				this->_node++;
 				return (*this);
 			}
 
@@ -301,6 +299,87 @@ namespace ft {
 		private:
 			pointer	_node;
 	};
+
+	/* *************** Non Members Vector Iterator Functions **************** */
+	// Operator==
+	template< class T >
+	bool	operator==(const ft::vector_iterator<T> & lhs, const ft::vector_iterator<T> & rhs) {
+		return (lhs.base() == rhs.base());
+	}
+	template< class T, class U >
+	bool	operator==(const ft::vector_iterator<T> & lhs, const ft::vector_iterator<U> & rhs) {
+		return (lhs.base() == rhs.base());
+	}
+
+	// Operator !=
+	template< class T >
+	bool	operator!=(const ft::vector_iterator<T> & lhs, const ft::vector_iterator<T> & rhs) {
+		return (lhs.base() != rhs.base());
+	}
+	template< class T, class U >
+	bool	operator!=(const ft::vector_iterator<T> & lhs, const ft::vector_iterator<U> & rhs) {
+		return (lhs.base() != rhs.base());
+	}
+
+	// Operator<
+	template< class T >
+	bool	operator<(const ft::vector_iterator<T> & lhs, const ft::vector_iterator<T> & rhs) {
+		return (lhs.base() < rhs.base());
+	}
+	template< class T, class U >
+	bool	operator<(const ft::vector_iterator<T> & lhs, const ft::vector_iterator<U> & rhs) {
+		return (lhs.base() < rhs.base());
+	}
+
+	template< class T >
+	bool	operator<=(const ft::vector_iterator<T> & lhs, const ft::vector_iterator<T> & rhs) {
+		return (lhs.base() <= rhs.base());
+	}
+	template< class T, class U >
+	bool	operator<=(const ft::vector_iterator<T> & lhs, const ft::vector_iterator<U> & rhs) {
+		return (lhs.base() <= rhs.base());
+	}
+
+	// Operator>
+	template< class T >
+	bool	operator>(const ft::vector_iterator<T> & lhs, const ft::vector_iterator<T> & rhs) {
+		return (lhs.base() > rhs.base());
+	}
+	template< class T, class U >
+	bool	operator>(const ft::vector_iterator<T> & lhs, const ft::vector_iterator<U> & rhs) {
+		return (lhs.base() > rhs.base());
+	}
+
+	// Operator>=
+	template< class T >
+	bool	operator>=(const ft::vector_iterator<T> & lhs, const ft::vector_iterator<T> & rhs) {
+		return (lhs.base() >= rhs.base());
+	}
+	template< class T, class U >
+	bool	operator>=(const ft::vector_iterator<T> & lhs, const ft::vector_iterator<U> & rhs) {
+		return (lhs.base() >= rhs.base());
+	}
+
+	// Operator+
+	template< class T >
+	vector_iterator<T>	operator+(typename ft::vector_iterator<T>::difference_type n, const ft::vector_iterator<T> & iter) {
+		return (vector_iterator<T>(iter.base() + n));
+	}
+
+	// Operator-
+	template< class T >
+	typename ft::vector_iterator<T>::diffrence_type	operator-(const vector_iterator<T> & lhs, const ft::vector_iterator<T> & rhs) {
+		return (lhs.base() - rhs.base());
+	}
+	template< class T, class U >
+	typename ft::vector_iterator<T>::difference_type	operator-(const vector_iterator<T> & lhs, const ft::vector_iterator<U> & rhs) {
+		return (lhs.base() - rhs.base());
+	}
+
+
+	/* ********************************************************************** */
+	/* ***************************** Vector Map ***************************** */
+	/* ********************************************************************** */
 };
 
 #endif
