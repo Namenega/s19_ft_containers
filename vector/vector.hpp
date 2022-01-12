@@ -6,7 +6,7 @@
 /*   By: namenega <namenega@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/24 12:45:40 by namenega          #+#    #+#             */
-/*   Updated: 2022/01/12 15:14:40 by namenega         ###   ########.fr       */
+/*   Updated: 2022/01/12 15:36:56 by namenega         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -597,6 +597,8 @@ void	vector_assign_test(void);
 void	vector_insert_test(void);
 void	vector_erase_test(void);
 void	vector_swap_test(void);
+void	vector_clear_test(void);
+void	vector_get_allocator_test(void);
 
 
 

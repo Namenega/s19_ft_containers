@@ -6,7 +6,7 @@
 /*   By: namenega <namenega@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/11 11:15:34 by namenega          #+#    #+#             */
-/*   Updated: 2022/01/12 15:23:19 by namenega         ###   ########.fr       */
+/*   Updated: 2022/01/12 15:41:10 by namenega         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -334,6 +334,41 @@ void	vector_swap_test(void) {
 	std::cout << std::endl;
 }
 
+void	vector_clear_test(void) {
+	FT::vector<int>		vec;
+
+	vec.push_back(100);
+	vec.push_back(200);
+	vec.push_back(300);
+	std::cout << "Vec contains :" << std::endl;
+	for (unsigned i = 0; i < vec.size(); i++)
+		std::cout << vec[i] << ' ';
+	std::cout << std::endl << std::endl;
+
+	vec.clear();
+	vec.push_back(400);
+	vec.push_back(500);
+	std::cout << "Vec contains :" << std::endl;
+	for (unsigned i = 0; i < vec.size(); i++)
+		std::cout << vec[i] << ' ';
+	std::cout << std::endl;
+}
+
+void	vector_get_allocator_test(void) {
+	FT::vector<int>		vec;
+	int					*p = vec.get_allocator().allocate(5);
+
+	for (unsigned int i = 0; i < 5; i++)
+		vec.get_allocator().construct(&p[i], i);
+	std::cout << "Vec contains :" << std::endl;
+	for (unsigned int i = 0; i < 5; i++)
+		std::cout << p[i] << ' ';
+	std::cout << std::endl;
+	for (unsigned int i = 0; i < 5; i++)
+		vec.get_allocator().destroy(&p[i]);
+	vec.get_allocator().deallocate(p, 5);
+}
+
 void	vector_testing() {
 	std::cout << "\033[1;35m/* ******** Vector Constructor Test ******** */\033[0m" << std::endl;
 	std::cout << std::endl;
@@ -441,12 +476,12 @@ void	vector_testing() {
 	std::cout << std::endl;
 	std::cout << "\033[1;35m/* ******** Vector Clear Test *************** */\033[0m" << std::endl;
 	std::cout << std::endl;
-	// vector_clear_test();
+	vector_clear_test();
 
 	std::cout << std::endl;
 	std::cout << "\033[1;35m/* ******** Vector Get_Allocator Test ****** */\033[0m" << std::endl;
 	std::cout << std::endl;
-	// vector_get_allocator_test();
+	vector_get_allocator_test();
 
 
 
