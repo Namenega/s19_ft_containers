@@ -6,7 +6,7 @@
 /*   By: namenega <namenega@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/24 12:45:40 by namenega          #+#    #+#             */
-/*   Updated: 2022/01/11 18:52:58 by namenega         ###   ########.fr       */
+/*   Updated: 2022/01/12 15:14:40 by namenega         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -180,7 +180,7 @@ namespace ft {
 			/* *************************** Size() *************************** */
 			/*	Returns the number of elements in the vector (which is not
 				necessarily equal to its storage capacity!) */
-			size_type	size() const {
+			__SIZE_TYPE__	size() const {
 				return (this->_size);
 			}
 
@@ -189,7 +189,7 @@ namespace ft {
 				can hold. It is the maximum potential size the container
 				can reach due to known systeem or library implementation
 				limitations. */
-			size_type	max_size() const {
+			__SIZE_TYPE__	max_size() const {
 				return (this->_base.max_size());
 			}
 
@@ -287,13 +287,13 @@ namespace ft {
 			reference	at(size_type n) {
 				if (n >= this->_size)
 					throw std::out_of_range("Vector at().");
-				return (*(this->_ptr[n]));
+				return (*(this->_ptr + n));
 			}
 
 			const_reference	at(size_type n) const {
 				if (n >= this->_size)
 					throw std::out_of_range("Vector const at().");
-				return (*(this->_ptr[n]));
+				return (*(this->_ptr + n));
 			}
 
 			/* ************************** Front() *************************** */
@@ -424,14 +424,27 @@ namespace ft {
 			/*	Removes from the vector a single element (position). This
 				effectively reduces the container size by the number of
 				the elements removed, which are destroyed. */
-			// iterator	erase(iterator position) {
-
-			// }
+			iterator	erase(iterator position) {
+				return (this->erase(position, position + 1));
+			}
 
 			/*	Removes from the vector a range of elements ([first, last]). */
-			// iterator	erase(iterator first, iterator last) {
+			iterator	erase(iterator first, iterator last) {
+				iterator		it = this->begin();
+				difference_type	diff = last - first;
+				size_type		i = 0;
 
-			// }
+				while (it + i != first)
+					i++;
+				while (it + i != this->end() - diff) {
+					this->_ptr[i] = this->_ptr[i + diff];
+					i++;
+				}
+				while (it + i != this->end())
+					this->_base.destroy(_ptr + i++);
+				this->_size -= diff;
+				return (first);
+			}
 
 			/* *************************** Swap() *************************** */
 			/*	Exchange the content of the container vy the content of x,
@@ -439,9 +452,22 @@ namespace ft {
 				Sizes may differ. After the call, the elements in this
 				container are those which were in x before, and the elements
 				of x are those which where in this. (clear+realloc)*/
-			// void	swap(vector& x) {
+			void	swap(vector& x) {
+				allocator_type	tmp_base = this->_base;
+				size_type		tmp_size = this->_size;
+				size_type		tmp_capacity = this->_capacity;
+				pointer			tmp_ptr = this->_ptr;
 
-			// }
+				this->_base = x._base;
+				this->_size = x._size;
+				this->_capacity = x._capacity;
+				this->_ptr = x._ptr;
+
+				x._base = tmp_base;
+				x._size = tmp_size;
+				x._capacity = tmp_capacity;
+				x._ptr = tmp_ptr;
+			}
 
 			/* ************************** Clear() *************************** */
 			/*	Removes all elements from the vector (which are destroyed),
@@ -461,9 +487,9 @@ namespace ft {
 			/* *********************** Get_allocator() ********************** */
 			/*	Returns a copy of the allocator object associated with
 				the vector. */
-			// allocator_type	get_allocator() const {
-
-			// }
+			allocator_type	get_allocator() const {
+				return (this->_base);
+			}
 		private:
 			size_type		_size; //size_type = long unsigned int
 			size_type		_capacity;
@@ -551,12 +577,27 @@ namespace ft {
 	// }
 }
 
-void	vector_testing();
-void	vector_operator_test();
+void	vector_testing(void);
+void	vector_operator_test(void);
 void	vector_begin_test(void);
 void	vector_end_test(void);
 void	vector_rbegin_test(void);
 void	vector_rend_test(void);
+void	vector_size_test(void);
+void	vector_maxsize_test(void);
+void	vector_resize_test(void);
+void	vector_capacity_test(void);
+void	vector_empty_test(void);
+void	vector_reserve_test(void);
+void	vector_subscript_operator_test(void);
+void	vector_at_test(void);
+void	vector_front_test(void);
+void	vector_back_test(void);
+void	vector_assign_test(void);
+void	vector_insert_test(void);
+void	vector_erase_test(void);
+void	vector_swap_test(void);
+
 
 
 
