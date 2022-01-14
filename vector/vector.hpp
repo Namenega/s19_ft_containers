@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   vector.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: namenega <namenega@student.s19.be>         +#+  +:+       +#+        */
+/*   By: namenega <namenega@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/24 12:45:40 by namenega          #+#    #+#             */
-/*   Updated: 2022/01/12 15:36:56 by namenega         ###   ########.fr       */
+/*   Updated: 2022/01/14 15:16:09 by namenega         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -508,56 +508,56 @@ namespace ft {
 		with elements in rhs at the same position.
 		Return true if they are equal. */
 
-	// template< class T, class Alloc >
-	// bool	operator==(	const vector< T, Alloc >& lhs,
-	// 					const vector< T, Alloc >& rhs) {
-
-	// }
+	template< class T, class Alloc >
+	bool	operator==(const vector< T, Alloc >& lhs,
+					const vector< T, Alloc >& rhs) {
+		return (lhs == rhs);
+	}
 
 	/* **************************** Operator!=() **************************** */
 	/*	Check if the content of lhs and rhs are different.
 		Return true if they are not equal. */
 	template< class T, class Alloc >
-	bool	operator!=(	const vector< T, Alloc >& lhs,
-						const vector< T, Alloc >& rhs) {
+	bool	operator!=(const vector< T, Alloc >& lhs,
+					const vector< T, Alloc >& rhs) {
 		return (!(lhs == rhs));
 	}
 
 	/* **************************** Operator<() ***************************** */
 	/*	Compares the content of lhs and rhs lexicographically.
 		Returns true if lhs < rhs */
-	// template< class T, class Alloc >
-	// bool	operator<(	const vector< T, Alloc >& lhs,
-	// 					const vector< T, Alloc >& rhs) {
-
-	// }
+	template< class T, class Alloc >
+	bool	operator<(const vector< T, Alloc >& lhs,
+					const vector< T, Alloc >& rhs) {
+		return (lhs < rhs);
+	}
 
 	/* **************************** Operator<=() **************************** */
 	/*	Compares the content of lhs and rhs lexicographically.
 		Returns true if lhs <= rhs */
-	// template< class T, class Alloc >
-	// bool	operator<=(	const vector< T, Alloc >& lhs,
-	// 					const vector< T, Alloc >& rhs) {
-
-	// }
+	template< class T, class Alloc >
+	bool	operator<=(const vector< T, Alloc >& lhs,
+					const vector< T, Alloc >& rhs) {
+		return (lhs <= rhs);
+	}
 
 	/* **************************** Operator>() ***************************** */
 	/*	Compares the content of lhs and rhs lexicographically.
 		Returns true if lhs > rhs */
-	// template< class T, class Alloc >
-	// bool	operator>(	const vector< T, Alloc >& lhs,
-	// 					const vector< T, Alloc >& rhs) {
-
-	// }
+	template< class T, class Alloc >
+	bool	operator>(const vector< T, Alloc >& lhs,
+			const vector< T, Alloc >& rhs) {
+		return (lhs > rhs);
+	}
 
 	/* **************************** Operator>=() **************************** */
 	/*	Compares the content of lhs and rhs lexicographically.
 		Returns true if lhs >= rhs */
-	// template< class T, class Alloc >
-	// bool	operator>=(	const vector< T, Alloc >& lhs,
-	// 					const vector< T, Alloc >& rhs) {
-
-	// }
+	template< class T, class Alloc >
+	bool	operator>=(const vector< T, Alloc >& lhs,
+					const vector< T, Alloc >& rhs) {
+		return (lhs >= rhs);
+	}
 
 
 	/* ********************************************************************** */
@@ -571,36 +571,12 @@ namespace ft {
 		its performance by mutually transferring ownership over their assets
 		to the other container.
 		Same as x.swap(y) */
-	// template< class T, class Alloc >
-	// void	swap(vector< T, Alloc >& x, vector< T, Alloc >& y) {
-	// 	x.swap(y);
-	// }
+	template< class T, class Alloc >
+	void	swap(vector< T, Alloc >& x, vector< T, Alloc >& y) {
+		x.swap(y);
+	}
 }
 
 void	vector_testing(void);
-void	vector_operator_test(void);
-void	vector_begin_test(void);
-void	vector_end_test(void);
-void	vector_rbegin_test(void);
-void	vector_rend_test(void);
-void	vector_size_test(void);
-void	vector_maxsize_test(void);
-void	vector_resize_test(void);
-void	vector_capacity_test(void);
-void	vector_empty_test(void);
-void	vector_reserve_test(void);
-void	vector_subscript_operator_test(void);
-void	vector_at_test(void);
-void	vector_front_test(void);
-void	vector_back_test(void);
-void	vector_assign_test(void);
-void	vector_insert_test(void);
-void	vector_erase_test(void);
-void	vector_swap_test(void);
-void	vector_clear_test(void);
-void	vector_get_allocator_test(void);
-
-
-
 
 #endif

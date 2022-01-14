@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   notions.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: namenega <namenega@student.s19.be>         +#+  +:+       +#+        */
+/*   By: namenega <namenega@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/29 13:04:17 by namenega          #+#    #+#             */
-/*   Updated: 2022/01/02 13:45:00 by namenega         ###   ########.fr       */
+/*   Updated: 2022/01/14 14:52:47 by namenega         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,3 +92,21 @@
 /* ************************************************************************** */
 /* ***************************** STACK/STACK.HPP **************************** */
 /* ************************************************************************** */
+
+/*	Stacks are a type of container adaptor, specifically designed to operate in
+	a LIFO context, where elements are inserted and extracted only from one end
+	of the container.
+	Container adaptor are classes the use an encapsulated object of a specific
+	container class as its underlying container, providing a specific set of
+	member functions to access its elements. */
+
+/*	friend */
+/*	In some circonstances, it is more convenient to grant member level access
+	to functions that are not members of a class. Only the class implementer
+	ca declare who its friends are. In a class definition, use the 'friend'
+	keyword and the name of a non member function to grant it access to the
+	and protected members of your class. In a template definition, a type
+	parameter can be declared as a friend.
+	
+	I you declare a friend function that was not previously declared, that
+	function is exported to the enclosing non-class scope. */

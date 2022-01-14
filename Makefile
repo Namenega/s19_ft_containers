@@ -1,5 +1,6 @@
 SRCNAME 	=	main.cpp					\
-				./vector/vector_testing.cpp
+				./vector/vector_testing.cpp	\
+				./stack/stack_testing.cpp
 
 SRCS 		= ${SRCNAME}
 

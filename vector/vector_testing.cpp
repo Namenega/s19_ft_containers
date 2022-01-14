@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   vector_testing.cpp                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: namenega <namenega@student.s19.be>         +#+  +:+       +#+        */
+/*   By: namenega <namenega@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/11 11:15:34 by namenega          #+#    #+#             */
-/*   Updated: 2022/01/12 15:41:10 by namenega         ###   ########.fr       */
+/*   Updated: 2022/01/14 14:55:51 by namenega         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,17 +27,17 @@ void	vector_constructor_test(void) {
 	int	tab[] = {15, 3, 50, 30};
 	FT::vector<int>	fifth(tab, tab + sizeof(tab) / sizeof(int));
 
-	std::cout << "vector 'first' values :" << std::endl;
+	std::cout << "Vector 'first' values :" << std::endl;
 	for (FT::vector<int>::iterator it = first.begin(); it != first.end(); ++it)
 		std::cout << *it << ' ';
 	std::cout << std::endl;
 
-	std::cout << "vector 'fourth' values :" << std::endl;
+	std::cout << "Vector 'fourth' values :" << std::endl;
 	for (FT::vector<int>::iterator it = fourth.begin(); it != fourth.end(); ++it)
 		std::cout << *it << ' ';
 	std::cout << std::endl;
 
-	std::cout << "vector 'fifth' values :" << std::endl;
+	std::cout << "Vector 'fifth' values :" << std::endl;
 	for (FT::vector<int>::iterator it = fifth.begin(); it != fifth.end(); ++it)
 		std::cout << *it << ' ';
 	std::cout << std::endl;
@@ -369,7 +369,23 @@ void	vector_get_allocator_test(void) {
 	vec.get_allocator().deallocate(p, 5);
 }
 
-void	vector_testing() {
+void	vector_nm_swap_test(void) {
+	FT::vector<int>		first(3, 100);
+	FT::vector<int>		second(4, 300);
+
+	first.swap(second);
+	std::cout << "Vec first contains :" << std::endl;
+	for (FT::vector<int>::iterator it = first.begin(); it != first.end(); it++)
+		std::cout << *it << ' ';
+	std::cout << std::endl;
+
+	std::cout << "Vec second contains :" << std::endl;
+	for (FT::vector<int>::iterator it = second.begin(); it != second.end(); it++)
+		std::cout << *it << ' ';
+	std::cout << std::endl;
+}
+
+void	vector_testing(void) {
 	std::cout << "\033[1;35m/* ******** Vector Constructor Test ******** */\033[0m" << std::endl;
 	std::cout << std::endl;
 	vector_constructor_test();
@@ -483,11 +499,10 @@ void	vector_testing() {
 	std::cout << std::endl;
 	vector_get_allocator_test();
 
-
-
-
-
-
+	std::cout << std::endl;
+	std::cout << "\033[1;35m/* ******** Vector NM_Swap Test ************ */\033[0m" << std::endl;
+	std::cout << std::endl;
+	vector_nm_swap_test();
 
 	std::cout << std::endl;
 }
