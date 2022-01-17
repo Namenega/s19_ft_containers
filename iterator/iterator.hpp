@@ -6,7 +6,7 @@
 /*   By: namenega <namenega@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/29 12:57:28 by namenega          #+#    #+#             */
-/*   Updated: 2022/01/11 15:05:48 by namenega         ###   ########.fr       */
+/*   Updated: 2022/01/17 17:31:42 by namenega         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ namespace ft {
 	/*	Base class template that can be used to derive iterator classes from it.
 		It is not an iterator class and does not provide any of the
 		functionnality an iterator is expected to have. It only provides some
-		member types. Needed for the default iterator_traits class template */
+		member types. Needed for the default iterator_traits class template. */
 	template< class Category, class T, class Distance = ptrdiff_t,
 				class Pointer = T*, class Reference = T& >
 	struct	iterator {
@@ -52,7 +52,7 @@ namespace ft {
 	/*	Traits class defining properties of iterators.
 		Standard algorithm determine certain properties of the iterators passed
 		to them and the range they represent by using the members of the
-		corresponding iterator_traits instantiation. */
+		corresponding iterator_traits instanciation. */
 	template< class Iterator >
 	struct	iterator_traits {
 		typedef typename	Iterator::difference_type	difference_type;
@@ -331,6 +331,7 @@ namespace ft {
 		return (lhs.base() < rhs.base());
 	}
 
+	// Operator<=
 	template< class T >
 	bool	operator<=(const ft::vector_iterator<T> & lhs, const ft::vector_iterator<T> & rhs) {
 		return (lhs.base() <= rhs.base());
@@ -378,8 +379,95 @@ namespace ft {
 
 
 	/* ********************************************************************** */
-	/* ***************************** Vector Map ***************************** */
+	/* **************************** Map Iterator **************************** */
 	/* ********************************************************************** */
-};
+
+	template< typename T >
+	class MIt {
+		public:
+			/* ************************ Member Types ************************ */
+			typedef typename	ft::iterator_traits< ft::iterator< ft::bidirectional_iterator_tag, T> >::iterator_category	iterator_category;
+			typedef typename	ft::iterator_traits< ft::iterator< ft::bidirectional_iterator_tag, T> >::value_type			value_type;
+			typedef typename	ft::iterator_traits< ft::iterator< ft::bidirectional_iterator_tag, T> >::difference_type	difference_type;
+			typedef typename	ft::iterator_traits< ft::iterator< ft::bidirectional_iterator_tag, T> >::pointer			pointer;
+			typedef typename	ft::iterator_traits< ft::iterator< ft::bidirectional_iterator_tag, T> >::reference			reference;
+			typedef				ft::Node< T >																				node_reference;
+			typedef				ft::Node< T >*																				node_pointer;
+
+			/* ************************ Constructors ************************ */
+			/*	Default */
+			MIt() : _node(u_nullptr), _end(u_nullptr) {}
+			MIt(node_pointer node, node_pointer end) : _node(node), _end(end) {}
+
+			/*	Copy */
+			template< class U >
+			MIt(const MIt< U >& x) : _node(x._node), _end(x._end) {}
+
+			/*	Destructor */
+			~MIt() {}
+
+			/*	Operator= */
+			template< class U >
+			MIt & operator=(const MIt & x) {
+				if (this != &x) {
+					this->_node = x._node;
+					this->_end = x._end;
+					this->_comp = x.comp;
+				}
+			}
+
+			/* ********************** Base & Operators ********************** */
+			/*	Base - returns base iterator */
+			node_pointer	base() const {
+				return (this->_node);
+			}
+			/*	Operator* - Dereference iterator */
+			reference	operator*() const {
+				return (this->_node->data);
+			}
+			/*	Operator++ - Increment iterator position */
+			MIt &		operator++(void) {
+
+			}
+
+			MIt			operator++(int) {
+				
+			}
+			/*	Operator-- - Decrease iterator opinion */
+			MIt &		operator--(void) {
+
+			}
+
+			MIt			operator--(int) {
+
+			}
+			/*	Operator-> - Dereference iterator */
+			pointer		operator->() const {
+				return (&this->_node->data);
+			}
+
+		private:
+			node_pointer	_node;
+			node_pointer	_end;
+	};
+	
+	/* *************** Non Members Map Iterator Functions **************** */
+	template< class T >
+	bool	operator==(const ft::MIt< T >& lhs, const ft::MIt< T >& rhs) {
+		return (lhs.base() == rhs.base());
+	}
+	template< class T, class U >
+	bool	operator==(const ft::MIt< T >& lhs, const ft::MIt< U >& rhs) {
+		return (lhs.base() == rhs.base());
+	}
+	template< class T >
+	bool	operator!=(const ft::MIt< T >& lhs, const ft::MIt< T >& rhs) {
+		return (lhs.base() != rhs.base());
+	}
+	template< class T, class U >
+	bool	operator!=(const ft::MIt< T >& lhs, const ft::MIt< U >& rhs) {
+		return (lhs.base() != rhs.base());
+	}
+}
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: namenega <namenega@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/30 15:32:37 by namenega          #+#    #+#             */
-/*   Updated: 2022/01/11 14:41:02 by namenega         ###   ########.fr       */
+/*   Updated: 2022/01/17 17:35:32 by namenega         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 # define UTILS_HPP
 
 # include <type_traits>
+# include <iostream>
 
 namespace ft {
 	/* ****************************** NULLPTR_T ***************************** */

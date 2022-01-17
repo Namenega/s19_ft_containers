@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   notions.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: namenega <namenega@student.42.fr>          +#+  +:+       +#+        */
+/*   By: namenega <namenega@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/29 13:04:17 by namenega          #+#    #+#             */
-/*   Updated: 2022/01/14 14:52:47 by namenega         ###   ########.fr       */
+/*   Updated: 2022/01/17 18:32:38 by namenega         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,6 +88,84 @@
 /* ************************************************************************** */
 /* ******************************* MAP/MAP.HPP ****************************** */
 /* ************************************************************************** */
+
+/*	Red black tree */
+/*	https://algorithmtutor.com/Data-Structures/Tree/Red-Black-Trees/ */
+/*	[see the link for picture about RBT] */
+/*	A RBT is a binary search tree having following five additional properties :
+		1. Every node in T is either black or red.
+		2. The root node of T is black.
+		3. Every NULL node is black. NULL nodes are the leaf nodes.
+			They do not contain any keys.
+		4. If a node is red, both of its children are black. This means no two
+			nodes on a path can be red nodes.
+		5. Every path from a root node to a NULL node has the same number of
+			black nodes.
+	
+	Among all dynamics set operations (search, predecessor, successor, insert,
+	delete, etc), there are 2 operations that may violate the invariants listed
+	above. These are insertion and deletion.
+	Therefore, after every insertion/deletion, we check if the operation violated
+	any of the properties : if it did, we need to restructure the tree to keep
+	the invariants intact. Three tools :
+		1. Left_rotate(T, x) : The left rotation at node X makes X goes down in
+			the left direction, and as a result, it's right child goes up. [link]
+		2. Right_rotate(T, y) : The right rotation at node X makes X goes down
+			in the right direction and as a result, its left child goes up. [link]
+		3. Recolor : recolor flips the color of a node. If it's red, it becomes
+			blac, and vice-versa.
+	We call a RBT a balanced search tree because its height is always in the
+	order of 0(log n) (Complexity level).
+
+	Insertion : to insert a node K into a red black tree T, we do the following :
+		1. Insert K using an ordinary BST insertion operation.
+		2. Color K in red
+		3. Check if the insertion violated the RBT properties. If yes : fix it.
+	Lets suppose about node K in tree T:
+	- P = parent node
+	- U = uncle node
+	- S = sibling node
+	- G = grandparent node
+
+	Case 1. T is empty : we make K the root of the tree and color it black.
+	Case 2. P is black : it can not violate any of the properties. Therefore, in
+			this case, we do not need to do anything.
+	Case 3. P is red : This violates property[4]. P and K are now both red. The
+			G must be black -> check whether U is red or black.
+
+		3.1 P is red and U is red : flip the color of P, U, G. P becomes black,
+			U becomes black and G becomes red (only if it's not the root).
+		3.2 P is red and U is black (or NULL) : we need single or double tree
+			rotations depending upon whether K is left or right child of P.
+			3.2.1 - P is right of G and K is right of P : left rotation at G
+				that makes G the new S of K. Next, change the color of S to red
+				and P to black.
+			3.2.2 - P is right of G and K is left of P : right rotation at P and
+				then apply 3.2.1.
+			3.2.3 - P is left of G and K is left of P : symetric solution of 3.2.1
+			3.2.4 - P is left of G and K is right of P : symetric to 3.2.2
+
+	Deletion : first we follow the ordinary BST deletion process, which makes sure
+		that X is either a leaf node or a single child.
+	
+	Case 1. X is a red node : we simply delete X since deleting a red node doesnt
+			violates any property.
+	Case 2. X has a red child : we replace X by its red child and change the color
+			of the child.
+	Case 3. X is a black node : deleting a black node violates propery[5], so we
+			add an extra black node to the deleted node and call it a double black
+			node. Now we need to convert this double black into a single black.
+		3.1 S is red : we switch the color of S and P and perform the left rotation
+			on P.
+		3.2 S is black and both of S children are black : switch S color to red,
+			if P color is red, we change its color to black and this becomes the
+			terminal case. Otherwise, we make P a new X and repeat process (?)
+		3.3 S is black, S left child is red and right child black : switch color
+			of S and left child of S, right rotation on S (it's 3.4 tree) 
+		3.4 S is black, S right child is red : switch color of right child to
+			black, P to black and left rotation on P 
+
+	*/
 
 /* ************************************************************************** */
 /* ***************************** STACK/STACK.HPP **************************** */

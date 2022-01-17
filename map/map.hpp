@@ -6,7 +6,7 @@
 /*   By: namenega <namenega@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/15 22:02:18 by namenega          #+#    #+#             */
-/*   Updated: 2022/01/17 16:36:45 by namenega         ###   ########.fr       */
+/*   Updated: 2022/01/17 16:46:48 by namenega         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,8 @@ namespace ft {
 				First & last = Input iterators to the initial and final position
 					in a range. The range used is [first,last], which includes
 					all the elements between first and last, including the
-					element pointed by first but not the element pointed by last. */
+					element pointed by first but not the element pointed by
+					last. */
 
 			/* ************************** Default *************************** */
 			/*	Constructs an empty container, with no elements. */
@@ -97,6 +98,7 @@ namespace ft {
 			map &	operator=(const map & x) {
 
 			}
+
 
 			/* ************************************************************** */
 			/* ************************** Iterators ************************* */
@@ -157,6 +159,7 @@ namespace ft {
 				
 			}
 
+
 			/* ************************************************************** */
 			/* ************************** Capacity ************************** */
 			/* ************************************************************** */
@@ -185,6 +188,7 @@ namespace ft {
 				
 			}
 
+
 			/* ************************************************************** */
 			/* *********************** Elements Access ********************** */
 			/* ************************************************************** */
@@ -202,6 +206,7 @@ namespace ft {
 			mapped_type &	operator[](const key_type& k) {
 				
 			}
+
 
 			/* ************************************************************** */
 			/* ************************** Modifiers ************************* */
@@ -265,6 +270,7 @@ namespace ft {
 
 			}
 
+
 			/* ************************************************************** */
 			/* ************************** Observers ************************* */
 			/* ************************************************************** */
@@ -299,6 +305,7 @@ namespace ft {
 			value_compare	value_comp() const {
 
 			}
+
 
 			/* ************************************************************** */
 			/* ************************* Operations ************************* */
@@ -372,6 +379,7 @@ namespace ft {
 
 			}
 
+
 			/* ************************************************************** */
 			/* ************************** Allocator ************************* */
 			/* ************************************************************** */
@@ -388,5 +396,63 @@ namespace ft {
 			key_compare								_comp;
 			ft::BTree< key_type, mapped_type >		_rbt;
 	};
+
+
+	/* ********************************************************************** */
+	/* ************************ Non Member Operators ************************ */
+	/* ********************************************************************** */
+
+	/* **************************** Operator==() **************************** */
+	template< class Key, class T, class Compare, class Alloc >
+	bool	operator==(const map< Key, T, Compare, Alloc >& lhs,
+						const map< Key, T, Compare, Alloc >& rhs) {
+
+	}
+
+	/* **************************** Operator!=() **************************** */
+	template< class Key, class T, class Compare, class Alloc >
+	bool	operator!=(const map< Key, T, Compare, Alloc >& lhs,
+						const map< Key, T, Compare, Alloc >& rhs) {
+
+	}
+
+	/* **************************** Operator<() ***************************** */
+	template< class Key, class T, class Compare, class Alloc >
+	bool	operator<(const map< Key, T, Compare, Alloc >& lhs,
+						const map< Key, T, Compare, Alloc >& rhs) {
+
+	}
+
+	/* **************************** Operator<=() **************************** */
+	template< class Key, class T, class Compare, class Alloc >
+	bool	operator<=(const map< Key, T, Compare, Alloc >& lhs,
+						const map< Key, T, Compare, Alloc >& rhs) {
+
+	}
+
+	/* **************************** Operator>() ***************************** */
+	template< class Key, class T, class Compare, class Alloc >
+	bool	operator>(const map< Key, T, Compare, Alloc >& lhs,
+						const map< Key, T, Compare, Alloc >& rhs) {
+
+	}
+
+	/* **************************** Operator>=() **************************** */
+	template< class Key, class T, class Compare, class Alloc >
+	bool	operator>=(const map< Key, T, Compare, Alloc >& lhs,
+						const map< Key, T, Compare, Alloc >& rhs) {
+
+	}
+
+	/* ********************************************************************** */
+	/* ************************ Non Member Functions ************************ */
+	/* ********************************************************************** */
+
+	/* ******************************* Swap() ******************************* */
+	template< class Key, class T, class Compare, class Alloc >
+	void	swap(map< Key, T, Compare, Alloc >& lhs,
+					map< Key, T, Compare, Alloc >& rhs) {
+		
+	}
 }
 #endif
