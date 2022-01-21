@@ -6,7 +6,7 @@
 /*   By: namenega <namenega@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/29 12:57:28 by namenega          #+#    #+#             */
-/*   Updated: 2022/01/21 12:17:29 by namenega         ###   ########.fr       */
+/*   Updated: 2022/01/21 12:33:49 by namenega         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -383,7 +383,7 @@ namespace ft {
 	/* ********************************************************************** */
 
 	template< typename T >
-	class MIt {
+	class map_iterator {
 		public:
 			/* ************************ Member Types ************************ */
 			typedef typename	ft::iterator_traits< ft::iterator< ft::bidirectional_iterator_tag, T> >::iterator_category	iterator_category;
@@ -396,16 +396,16 @@ namespace ft {
 
 			/* ************************ Constructors ************************ */
 			/*	Default */
-			MIt() : _node(u_nullptr), _end(u_nullptr) {}
-			MIt(node_pointer node, node_pointer end) : _node(node), _end(end) {}
+			map_iterator() : _node(u_nullptr), _end(u_nullptr) {}
+			map_iterator(node_pointer node, node_pointer end) : _node(node), _end(end) {}
 
 			/*	Copy */
 			template< class U >
-			MIt(const MIt< U >& x) : _node(x._node), _end(x._end) {}
+			map_iterator(const map_iterator< U >& x) : _node(x._node), _end(x._end) {}
 
 			/*	Operator= */
 			template< class U >
-			MIt & operator=(const MIt & x) {
+			map_iterator & operator=(const map_iterator & x) {
 				if (this != &x) {
 					this->_node = x._node;
 					this->_end = x._end;
@@ -414,7 +414,7 @@ namespace ft {
 			}
 
 			/*	Destructor */
-			~MIt() {}
+			~map_iterator() {}
 
 			/* ********************** Base & Operators ********************** */
 			/*	Base - returns base iterator */
@@ -426,7 +426,7 @@ namespace ft {
 				return (this->_node->data);
 			}
 			/*	Operator++ - Increment iterator position */
-			MIt &		operator++(void) {
+			map_iterator &		operator++(void) {
 				node_pointer	cursor = _node;
 
 				if (_node->right == _end) {
@@ -452,14 +452,14 @@ namespace ft {
 				return (*this)
 			}
 
-			MIt			operator++(int) {
-				MIt	tmp(*this);
+			map_iterator			operator++(int) {
+				map_iterator	tmp(*this);
 
 				operator++();
 				return (tmp);
 			}
 			/*	Operator-- - Decrease iterator opinion */
-			MIt &		operator--(void) {
+			map_iterator &		operator--(void) {
 				node_pointer	cursor = _node;
 
 				if (_node->left == _end) {
@@ -486,8 +486,8 @@ namespace ft {
 				return (*this);
 			}
 
-			MIt			operator--(int) {
-				MIt	tmp(*this);
+			map_iterator			operator--(int) {
+				map_iterator	tmp(*this);
 
 				operator--();
 				return (tmp);
@@ -504,19 +504,19 @@ namespace ft {
 	
 	/* *************** Non Members Map Iterator Functions **************** */
 	template< class T >
-	bool	operator==(const ft::MIt< T >& lhs, const ft::MIt< T >& rhs) {
+	bool	operator==(const ft::map_iterator< T >& lhs, const ft::map_iterator< T >& rhs) {
 		return (lhs.base() == rhs.base());
 	}
 	template< class T, class U >
-	bool	operator==(const ft::MIt< T >& lhs, const ft::MIt< U >& rhs) {
+	bool	operator==(const ft::map_iterator< T >& lhs, const ft::map_iterator< U >& rhs) {
 		return (lhs.base() == rhs.base());
 	}
 	template< class T >
-	bool	operator!=(const ft::MIt< T >& lhs, const ft::MIt< T >& rhs) {
+	bool	operator!=(const ft::map_iterator< T >& lhs, const ft::map_iterator< T >& rhs) {
 		return (lhs.base() != rhs.base());
 	}
 	template< class T, class U >
-	bool	operator!=(const ft::MIt< T >& lhs, const ft::MIt< U >& rhs) {
+	bool	operator!=(const ft::map_iterator< T >& lhs, const ft::map_iterator< U >& rhs) {
 		return (lhs.base() != rhs.base());
 	}
 }
