@@ -6,7 +6,7 @@
 /*   By: namenega <namenega@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/29 12:57:28 by namenega          #+#    #+#             */
-/*   Updated: 2022/01/17 17:31:42 by namenega         ###   ########.fr       */
+/*   Updated: 2022/01/21 12:17:29 by namenega         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -403,9 +403,6 @@ namespace ft {
 			template< class U >
 			MIt(const MIt< U >& x) : _node(x._node), _end(x._end) {}
 
-			/*	Destructor */
-			~MIt() {}
-
 			/*	Operator= */
 			template< class U >
 			MIt & operator=(const MIt & x) {
@@ -415,6 +412,9 @@ namespace ft {
 					this->_comp = x.comp;
 				}
 			}
+
+			/*	Destructor */
+			~MIt() {}
 
 			/* ********************** Base & Operators ********************** */
 			/*	Base - returns base iterator */
@@ -427,19 +427,70 @@ namespace ft {
 			}
 			/*	Operator++ - Increment iterator position */
 			MIt &		operator++(void) {
+				node_pointer	cursor = _node;
 
+				if (_node->right == _end) {
+					cursor = _node->parent;
+					while (cursor != u_nullptr && cursor != _end && cursor->data.first < _node->data.first)
+						cursor = cursor->parent;
+					if (cursor == 0)
+						_node = _end;
+					else
+						_node = cursor;
+				} else if (cursor == end) {
+					_node = _end;
+				} else {
+					cursor = _node->right;
+					if (cursor == _end->parent && cursor->right == _end)
+						_node = cursor;
+					else {
+						while (cursor->left != _end)
+							cursor = cursor->left;
+					}
+					_node = cursor;
+				}
+				return (*this)
 			}
 
 			MIt			operator++(int) {
-				
+				MIt	tmp(*this);
+
+				operator++();
+				return (tmp);
 			}
 			/*	Operator-- - Decrease iterator opinion */
 			MIt &		operator--(void) {
+				node_pointer	cursor = _node;
 
+				if (_node->left == _end) {
+					cursor = _node->parent;
+					while (cursor != u_nullptr && cursor != _end && cursor->data.first > _node->data.first)
+						cursor = cursor->parent;
+					_node = cursor;
+					if (cursor == 0)
+						_node = _end->right;
+					else
+						_node = cursor;
+				} else if (cursor == _end) {
+					_node = _end->right;
+				} else {
+					cursor = _node->left;
+					if (cursor == _end->parent && cursor->left == _end)
+						_node = cursor;
+					else {
+						while (cursor->right != _end)
+							cursor = cursor->right;
+					}
+					_node = cursor;
+				}
+				return (*this);
 			}
 
 			MIt			operator--(int) {
+				MIt	tmp(*this);
 
+				operator--();
+				return (tmp);
 			}
 			/*	Operator-> - Dereference iterator */
 			pointer		operator->() const {
