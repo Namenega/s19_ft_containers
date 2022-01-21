@@ -6,7 +6,7 @@
 /*   By: namenega <namenega@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/30 15:32:37 by namenega          #+#    #+#             */
-/*   Updated: 2022/01/21 11:41:07 by namenega         ###   ########.fr       */
+/*   Updated: 2022/01/21 14:42:56 by namenega         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,7 +102,7 @@ namespace ft {
 
 	template< class InputIterator1, class InputIterator2, class Compare >
 	bool	lexicographical_compare(InputIterator1 first1, InputIterator1 last1,
-								InputIterator2 first2, InputIterator2 last2, Compare Comp) {
+								InputIterator2 first2, InputIterator2 last2, Compare comp) {
 		for ( ; (first1 != last1) && (first2 != last2); ++first1, (void)++first2) {
 			if (comp(*first1, *first2))
 				return (true);

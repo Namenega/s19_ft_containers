@@ -6,7 +6,7 @@
 /*   By: namenega <namenega@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/15 22:02:18 by namenega          #+#    #+#             */
-/*   Updated: 2022/01/21 13:25:31 by namenega         ###   ########.fr       */
+/*   Updated: 2022/01/21 17:00:38 by namenega         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,10 +40,26 @@ namespace ft {
 			typedef typename	allocator_type::const_pointer								const_pointer;
 
 			typedef				ft::map_iterator< value_type >								iterator;
-			typedef				ft::map_iterator< const value_type >						const_iterator;
+			typedef				ft::map_iterator< value_type >								const_iterator;
 			typedef				ft::reverse_iterator< iterator >							reverse_iterator;
 			typedef				ft::reverse_iterator< const_iterator >						const_reverse_iterator;
-			typedef typename	allocator_type::template rebind< Node<value_type> >::other	node_allocator
+			typedef typename	allocator_type::template rebind< Node<value_type> >::other	node_allocator;
+
+			class	value_compare : ft::binary_function<value_type, value_type, bool> {
+				friend class	map<key_type, mapped_type, key_compare, allocator_type>;
+				protected:
+					Compare			comp;
+					value_compare	(Compare c) : comp(c) {}
+
+				public:
+					typedef	bool		result_type;
+					typedef	value_type	first_argument_type;
+					typedef	value_type	second_argument_type;
+
+					bool	operator()(const value_type & x, const value_type & y) const {
+						return (comp(x.first, y.first));
+					}
+			};
 
 			/* ************************************************************** */
 			/* ****************** Constructors, Destructors ***************** */
@@ -65,7 +81,7 @@ namespace ft {
 			/*	Constructs an empty container, with no elements. */
 			explicit	map(const key_compare & comp = key_compare(),
 							const allocator_type & alloc = allocator_type())
-			: _alloc(alloc), _comp(comp), _tree() {}
+			: _alloc(alloc), _comp(comp), _rbt() {}
 
 
 			/* *************************** Range **************************** */
@@ -75,14 +91,14 @@ namespace ft {
 			template< class InputIterator >
 			map(InputIterator first, InputIterator last, const key_compare & comp
 				= key_compare(), const allocator_type & alloc = allocator_type())
-			: : _alloc(alloc), _comp(comp), _tree() {
+			: _alloc(alloc), _comp(comp), _rbt() {
 				this->insert(first, last);
 			}
 
 			/* **************************** Copy **************************** */
 			/*	Constructs a container with a copy of each of the elements
 				in x. */
-			map(const map& x) : _alloc(alloc), _comp(comp), _tree() {
+			map(const map& x) : _alloc(x._alloc), _comp(x._comp), _rbt() {
 				this->insert(x.begin(), x.end());
 			}
 
@@ -90,7 +106,7 @@ namespace ft {
 			/*	Destroys all container elements, and deallocates all the storage
 				capacity allocated by the map container using its allocator. */
 			~map() {
-				_tree.clear(_tree.getRoot());
+				_rbt.clear(_rbt.getRoot());
 			}
 			
 			/* ************************* Operator=() ************************ */
@@ -119,11 +135,11 @@ namespace ft {
 				If the container is empty, the returned iterator value shall not
 				be dereferenced. */
 			iterator	begin() {
-				return (iterator(_tree.firstNode(), _tree.getEnd()));
+				return (iterator(_rbt.firstNode(), _rbt.getEnd()));
 			}
 
-			const iterator	begin() const {
-				return (const_iterator(_tree.firstNode(), _tree.getEnd()));
+			const_iterator	begin() const {
+				return (const_iterator(_rbt.firstNode(), _rbt.getEnd()));
 			}
 
 			/* *************************** End() **************************** */
@@ -132,11 +148,11 @@ namespace ft {
 				the last element in the container. It does not point to any
 				element, and thus shall not be dereferenced. */
 			iterator	end() {
-				return (iterator(_tree.getEnd(), _tree.getEnd()));
+				return (iterator(_rbt.getEnd(), _rbt.getEnd()));
 			}
 
-			const iterator	end() const {
-				return (const_iterator(_tree.getEnd(), _tree.getEnd()));
+			const_iterator	end() const {
+				return (const_iterator(_rbt.getEnd(), _rbt.getEnd()));
 			}
 
 			/* ************************** Rbegin() ************************** */
@@ -146,11 +162,11 @@ namespace ft {
 				to the element preceding the one that would be pointer to by
 				member end. */
 			reverse_iterator	rbegin() {
-				return (reverse_iterator(iterator(_tree.getEnd(), _tree.getEnd())));
+				return (reverse_iterator(iterator(_rbt.getEnd(), _rbt.getEnd())));
 			}
 
-			const reverse_iterator	rbegin() const {
-				return (const_reverse_iterator(iterator(_tree.getEnd(), _tree.getEnd())));
+			const_reverse_iterator	rbegin() const {
+				return (const_reverse_iterator(iterator(_rbt.getEnd(), _rbt.getEnd())));
 			}
 
 			/* *************************** Rend() *************************** */
@@ -159,13 +175,17 @@ namespace ft {
 				mapp:rbegin() & map::rend() contains all the elements of the
 				container in reverse order. */
 			reverse_iterator	rend() {
-				return (reverse_iterator(this->begin()));
+				return (reverse_iterator(iterator(this->begin())));
 			}
 
-			const reverse_iterator	rend() const {
+			const_reverse_iterator	rend() const {
 				return (const_reverse_iterator(this->begin()));
 			}
 
+			// reverse_iterator rbegin() { return (reverse_iterator(iterator(_rbt.getEnd(), _rbt.getEnd()))); }
+            // const_reverse_iterator rbegin() const { return (const_reverse_iterator(iterator(_rbt.getEnd(), _rbt.getEnd()))); }
+            // reverse_iterator rend() { return (reverse_iterator(this->begin())); }
+            // const_reverse_iterator rend() const { return (const_reverse_iterator(this->begin())); }
 
 			/* ************************************************************** */
 			/* ************************** Capacity ************************** */
@@ -174,14 +194,14 @@ namespace ft {
 			/* ************************** Empty() *************************** */
 			/*	Returns wether the map container is empty (i.e wether its size
 				is 0). This function doesn't modify the container in any way. */
-			bool	empty() const {
-				return (_tree.getSize() == 0 ? true : false);
-			}
+			// bool	empty() const {
+			// 	return (_rbt.getSize() == 0 ? true : false);
+			// }
 
 			/* *************************** Size() *************************** */
 			/*	Returns the number of elements in the map container. */
 			__SIZE_TYPE__	size() const {
-				return (_tree.getSize());
+				return (_rbt.getSize());
 			}
 
 			/* ************************* Max_size() ************************* */
@@ -191,9 +211,9 @@ namespace ft {
 				the container is by no means guarnteed to be able to reach that
 				size. It can still fail to allocate storage at any point before
 				that size is reached. */
-			__SIZE_TYPE__	max_size() const {
-				return (allocator_type().max_size());
-			}
+			// __SIZE_TYPE__	max_size() const {
+			// 	return (allocator_type().max_size());
+			// }
 
 
 			/* ************************************************************** */
@@ -211,10 +231,10 @@ namespace ft {
 				to the element. (the element is constructed using its default
 				constructor) */
 			mapped_type &	operator[](const key_type& k) {
-				ft::Node<value_type>*	ptr = _tree.search(k);
+				ft::Node<value_type>*	ptr = _rbt.search(k);
 
 				if (ptr == u_nullptr)
-					ptr = _tree.insertNode(ft::make_pair<key_type, mapped_type>(k, mapped_type()));
+					ptr = _rbt.insertNode(ft::make_pair<key_type, mapped_type>(k, mapped_type()));
 				return (ptr->data.second);
 			}
 
@@ -236,23 +256,23 @@ namespace ft {
 				ft::Node<value_type>*	ptr;
 				bool					find = true;
 
-				if ((ptr = _tree.search(val.first)) != u_nullptr)
+				if ((ptr = _rbt.search(val.first)) != u_nullptr)
 					find = false;
-				ptr = _tree.insertNode(val);
-				return (ft::make_pair<iterator, bool>(iterator(ptr, _tree.getEnd()), find));
+				ptr = _rbt.insertNode(val);
+				return (ft::make_pair<iterator, bool>(iterator(ptr, _rbt.getEnd()), find));
 			}
 
 			/*	With hint */
 			iterator	insert(iterator position, const value_type & val) {
 				(void)position;
-				return (iterator(_tree.insertNode(val), _tree.getEnd()));
+				return (iterator(_rbt.insertNode(val), _rbt.getEnd()));
 			}
 			
 			/*	Range */
 			template< class InputIterator >
 			void	insert(InputIterator first, InputIterator last) {
 				while (first != last) {
-					_tree.insertNode(*first);
+					_rbt.insertNode(*first);
 					first++;
 				}
 			}
@@ -267,11 +287,11 @@ namespace ft {
 				while (it != position)
 					it++;
 				if (it == position)
-					_tree.deleteNode(it.base, it->first);
+					_rbt.deleteNode(it.base, it->first);
 			}
 
-			__SIZE_TYPE__	erase(const key_type& k) {
-				return (_tree.deleteNode(_tree.getRoot(), key));
+			__SIZE_TYPE__	erase(const key_type& key) {
+				return (_rbt.deleteNode(_rbt.getRoot(), key));
 			}
 
 			void	erase(iterator first, iterator last) {
@@ -280,7 +300,7 @@ namespace ft {
 				first = x.begin();
 				last = x.end();
 				while (first != last) {
-					_tree.deleteNode(_tree.getRoot(), first->first);
+					_rbt.deleteNode(_rbt.getRoot(), first->first);
 					first++;
 				}
 			}
@@ -292,9 +312,9 @@ namespace ft {
 				container are those which were in x before the call, and the 
 				elements of x are those which were in this. All iterators,
 				references and pointers remains valid for the swapped objects. */
-			void	swap(map& x) {
-				_tree.swap(x._tree)
-			}
+			// void	swap(map& x) {
+			// 	_rbt.swap(x._rbt)
+			// }
 
 			/* ************************** Clear() *************************** */
 			/*	Removes all elements from the map container (which are
@@ -320,9 +340,9 @@ namespace ft {
 				and returns 'true' if the first argument is considered to go
 				before the second in the strict weak ordering it defines, and
 				false otherwise. */
-			key_compare	key_comp() const {
-				return (_comp);
-			}
+			// key_compare	key_comp() const {
+			// 	return (_comp);
+			// }
 			
 			/* ************************ Value_comp() ************************ */
 			/*	Returns comparison object that can be used to compare two
@@ -350,30 +370,30 @@ namespace ft {
 				iterator to end().
 				Two keya are considered equivalent if the container's comparison
 				object returns false. */
-			iterator	find(const key_type& k) {
-				ft::Node<value_type>*	find;
+			// iterator	find(const key_type& k) {
+			// 	ft::Node<value_type>*	find;
 
-				if ((find = _tree.search(k)) == u_nullptr)
-					find = _tree.getEnd();
-				return (iterator(find, _tree.getEnd()));
-			}
+			// 	if ((find = _rbt.search(k)) == u_nullptr)
+			// 		find = _rbt.getEnd();
+			// 	return (iterator(find, _rbt.getEnd()));
+			// }
 
-			const_iterator	find(const key_type & k) const {
-				ft::Node<value_type>*	find;
+			// const_iterator	find(const key_type & k) const {
+			// 	ft::Node<value_type>*	find;
 
-				if ((find = _tree.search(k)) == u_nullptr)
-					find = _tree.getEnd();
-				return (const_iterator(find, _tree.getEnd()));
-			}
+			// 	if ((find = _rbt.search(k)) == u_nullptr)
+			// 		find = _rbt.getEnd();
+			// 	return (iterator(find, _rbt.getEnd()));
+			// }
 
 			/* ************************** Count() *************************** */
 			/*	Searches the container for elements with a key equivalent to k
 				and returns the number of matches.
 				Because all elements in a map container are unique, the function
 				can only return 1 (if the element is found) or 0. */
-			__SIZE_TYPE__	count(const key_type & k) const {
-				return (_tree.search(k) == u_nullptr ? 0 : 1)
-			}
+			// __SIZE_TYPE__	count(const key_type & k) const {
+			// 	return (_rbt.search(k) == u_nullptr ? 0 : 1)
+			// }
 			
 			/* *********************** Lower_bound() ************************ */
 			/*	Returns an iterator pointing to the first element of the
@@ -381,29 +401,29 @@ namespace ft {
 				The function uses its internal comparison object (key_comp) to
 				determine this, returning an iterator to the first element for
 				which key_comp(element_key, k) would return false. */
-			iterator	lower_bound(const key_type & k) {
-				// iterator	it = begin();
+			// iterator	lower_bound(const key_type & k) {
+			// 	// iterator	it = begin();
 
-				// while (it != end()) {
-				// 	if (_comp(it->first, k) == false)
-				// 		break ;
-				// 	it++;
-				// }
+			// 	// while (it != end()) {
+			// 	// 	if (_comp(it->first, k) == false)
+			// 	// 		break ;
+			// 	// 	it++;
+			// 	// }
 
-				for (iterator it = begin(); it != end(); it++) {
-					if (_comp(it->first, k) == false)
-						break ;
-				}
-				return (it);
-			}
+			// 	for (iterator it = begin(); it != end(); it++) {
+			// 		if (_comp(it->first, k) == false)
+			// 			break ;
+			// 	}
+			// 	return (it);
+			// }
 
-			const_iterator	lower_bound(const key_type & k) const {
-				for (const_iterator it = begin(); it != end(); it++) {
-					if (_comp(it->first, k) == false)
-						break ;
-				}
-				return (it);
-			}
+			// const_iterator	lower_bound(const key_type & k) const {
+			// 	for (iterator it = begin(); it != end(); it++) {
+			// 		if (_comp(it->first, k) == false)
+			// 			break ;
+			// 	}
+			// 	return (it);
+			// }
 
 			/* *********************** Upper_bound() ************************ */
 			/*	Returns an iterator pointing to the first element in the
@@ -411,21 +431,21 @@ namespace ft {
 				The function uses its internal comparison object (key_comp) to
 				determine this, returning an iterator to the first element for
 				which key_comp(element_key, k) would return true. */
-			iterator	upper_bound(const key_type & k) {
-				for (iterator it = begin(); it != end(); it++) {
-					if (_comp(k, it->first) == true)
-						break ;
-				}
-				return (it);
-			}
+			// iterator	upper_bound(const key_type & k) {
+			// 	for (iterator it = begin(); it != end(); it++) {
+			// 		if (_comp(k, it->first) == true)
+			// 			break ;
+			// 	}
+			// 	return (it);
+			// }
 
-			const_iterator	upper_bound(const key_type & k) const {
-				for (const_iterator it = begin(); it != end(); it++) {
-					if (_comp(k, it->first) == true)
-						break ;
-				}
-				return (it);
-			}
+			// const_iterator	upper_bound(const key_type & k) const {
+			// 	for (iterator it = begin(); it != end(); it++) {
+			// 		if (_comp(k, it->first) == true)
+			// 			break ;
+			// 	}
+			// 	return (it);
+			// }
 
 			/* *********************** Equal_range() ************************ */
 			/*	Returns the bounds of a range that includes all the elements in
@@ -436,13 +456,13 @@ namespace ft {
 				with both iterators pointing to the first element that has a key
 				considered to go after k according to the container's internal
 				comparison object (key_comp). */
-			pair<iterator,iterator>	equal_range(const key_type & k) {
-				return (ft::make_pair<iterator,iterator>(lower_bound(k),upper_bound(k)));
-			}
+			// pair<iterator,iterator>	equal_range(const key_type & k) {
+			// 	return (ft::make_pair<iterator,iterator>(lower_bound(k),upper_bound(k)));
+			// }
 
-			pair<const_iterator,const_iterator>	equal_range(const key_type & k) const {
-				return (ft::make_pair<const_iterator,const_iterator>(lower_bound(k),upper_bound(k)));
-			}
+			// pair<const_iterator,const_iterator>	equal_range(const key_type & k) const {
+			// 	return (ft::make_pair<const_iterator,const_iterator>(lower_bound(k),upper_bound(k)));
+			// }
 
 			/* ************************************************************** */
 			/* ************************** Allocator ************************* */
@@ -458,7 +478,7 @@ namespace ft {
 		private:
 			allocator_type							_alloc;
 			key_compare								_comp;
-			ft::BTree< key_type, mapped_type >		_rbt;
+			ft::RBTree< key_type, mapped_type >		_rbt;
 	};
 
 
@@ -519,4 +539,7 @@ namespace ft {
 		lhs.swap(rhs);
 	}
 }
+
+void	map_testing(void);
+
 #endif

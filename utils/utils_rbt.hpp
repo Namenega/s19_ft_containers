@@ -6,7 +6,7 @@
 /*   By: namenega <namenega@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/17 17:32:23 by namenega          #+#    #+#             */
-/*   Updated: 2022/01/21 12:21:50 by namenega         ###   ########.fr       */
+/*   Updated: 2022/01/21 15:56:28 by namenega         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,10 +21,10 @@ namespace ft {
 		typedef	T	value_type;
 
 		value_type		data;		/* Holds the key */
-		int				color;		/* 1 = Red, 0 = Black */
 		Node*			parent;		/* Pointer to the parent */
 		Node*			left;		/* Pointer to the left child */
 		Node*			right;		/* Pointer to the right child */
+		int				color;		/* 1 = Red, 0 = Black */
 
 		/* ************************** Constructors ************************** */
 		/*	Default */
@@ -174,7 +174,7 @@ namespace ft {
 				return (this->size);
 			}
 
-			node_pointer	search(const key-type & key) const {
+			node_pointer	search(const key_type & key) const {
 				node_pointer	tmp = this->root;
 
 				while (tmp != end) {
@@ -215,10 +215,10 @@ namespace ft {
 			/*	Insert the key to the tree in its appropriate position and fix
 				the tree. */
 			node_pointer	insertNode(const value_type& val) {
-				node_pointer	x;
+				node_pointer	find;
 
-				if ((x = search(val.first)) != u_nullptr)
-					return (x);
+				if ((find = search(val.first)) != u_nullptr)
+					return (find);
 				node_pointer	node = node_allocator().allocate(1);
 				node_allocator().construct(node, node_type(ft::make_pair<key_type, mapped_type>(val.first, val.second)));
 				node->parent = u_nullptr;
@@ -226,7 +226,7 @@ namespace ft {
 				node->right = end;
 				node->color = 1; /* new node is red */
 				size++;
-				node_pointer y = null_ptr;
+				node_pointer y = u_nullptr;
 				node_pointer x = this->root;
 
 				while (x != end) {
@@ -276,7 +276,7 @@ namespace ft {
 					if (node->data.first == key) {
 						z = node;
 					}
-					if (node->data <= key)
+					if (node->data.first <= key)
 						node = node->right;
 					else
 						node = node->left;
@@ -323,7 +323,7 @@ namespace ft {
 				clear(node->right);
 				node_allocator().destroy(node);
 				node_allocator().deallocate(node, 1);
-				node = null_ptr;
+				node = u_nullptr;
 			}
 
 			void	swap(RBTree & x) {
@@ -349,7 +349,7 @@ namespace ft {
 
 			void	indexEnd() {
 				end->left = firstNode();
-				end->right = lastNode;
+				end->right = lastNode();
 			}
 
 			node_pointer	minimum(node_pointer node) {
@@ -477,7 +477,7 @@ namespace ft {
 							}
 							/* case 3.4 */
 							s->color = x->parent->color;
-							x->aprent->color = 0;
+							x->parent->color = 0;
 							s->right->color = 0;
 							leftRotate(x->parent);
 							x = root;

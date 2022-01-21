@@ -1,6 +1,7 @@
 SRCNAME 	=	main.cpp					\
 				./vector/vector_testing.cpp	\
-				./stack/stack_testing.cpp
+				./stack/stack_testing.cpp	\
+				./map/map_testing.cpp
 
 SRCS 		= ${SRCNAME}
 
