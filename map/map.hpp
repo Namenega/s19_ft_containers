@@ -6,7 +6,7 @@
 /*   By: namenega <namenega@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/15 22:02:18 by namenega          #+#    #+#             */
-/*   Updated: 2022/01/24 15:42:02 by namenega         ###   ########.fr       */
+/*   Updated: 2022/01/24 17:29:10 by namenega         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -213,7 +213,7 @@ namespace ft {
 				size. It can still fail to allocate storage at any point before
 				that size is reached. */
 			__SIZE_TYPE__	max_size() const {
-				return (allocator_type().max_size());
+				return (allocator_type().max_size() * 2);
 			}
 
 
