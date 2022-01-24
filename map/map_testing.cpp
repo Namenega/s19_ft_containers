@@ -6,12 +6,13 @@
 /*   By: namenega <namenega@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/21 13:37:22 by namenega          #+#    #+#             */
-/*   Updated: 2022/01/21 17:05:19 by namenega         ###   ########.fr       */
+/*   Updated: 2022/01/24 15:52:58 by namenega         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "map.hpp"
 #include <iostream>
+#include <map>
 
 #ifndef FT
  #define FT ft
@@ -49,12 +50,6 @@ void	map_constructor_test(void) {
 	std::cout << "Map third contains :\n";
 	for (FT::map<char, int>::iterator it = third.begin(); it != third.end(); ++it)
 		std::cout << "[ " << it->first << " : " << it->second << " ]" << std::endl;
-	// std::cout << std::endl;
-
-	// FT::map<char, int, classComp>	fourth;
-	// std::cout << "Map fourth contains :\n";
-	// for (FT::map<char, int>::iterator it = fourth.begin(); it != fourth.end(); ++it)
-	// 	std::cout << "key : " << it->first << " --> value : " << it->second << std::endl;
 }
 
 void	map_operator_test(void) {
@@ -72,7 +67,7 @@ void	map_operator_test(void) {
 	std::cout << "Size second : " << second.size() << std::endl;
 }
 
-void	map_begin_end_test() {
+void	map_begin_end_test(void) {
 	FT::map<char, int>	mapp;
 
 	mapp['x'] = 8;
@@ -81,31 +76,261 @@ void	map_begin_end_test() {
 	std::cout << "Mapp contains :\n";
 	for (FT::map<char, int>::iterator it = mapp.begin(); it != mapp.end(); ++it)
 		std::cout << "[ " << it->first << " : " << it->second << " ]" << std::endl;
-	std::cout << std::endl;
-
 }
 
-void	map_rbegin_rend_test() {
+void	map_rbegin_rend_test(void) {
 	FT::map<char, int>	mapp;
 
 	mapp['x'] = 8;
 	mapp['y'] = 16;
 	mapp['z'] = 32;
 	std::cout << "Mapp contains :\n";
-
-	FT::map<char, int>::reverse_iterator rit = mapp.rbegin();
-	FT::map<char, int>::reverse_iterator rit2 = mapp.rend();
-	std::cout << "Beg. [ " << rit->first << " : " << rit->second << " ]" << std::endl;
-	std::cout << "End. [ " << rit2->first << " : " << rit2->second << " ]" << std::endl;
-
-
-
-	for (FT::map<char, int>::reverse_iterator rit = mapp.rbegin(); rit != mapp.rend(); ++rit) {
-		std::cout << "yo " << std::endl;
+	for (FT::map<char, int>::reverse_iterator rit = mapp.rbegin(); rit != mapp.rend(); ++rit)
 		std::cout << "[ " << rit->first << " : " << rit->second << " ]" << std::endl;
+}
+
+void	map_empty_test(void) {
+	FT::map<char, int>	mapp;
+
+	mapp['x'] = 8;
+	mapp['y'] = 16;
+	mapp['z'] = 32;
+	while (!mapp.empty()) {
+		std::cout << "[ " << mapp.begin()->first << " : " << mapp.begin()->second << " ]" << std::endl;
+		mapp.erase(mapp.begin());
 	}
-		std::cout << "yo2" << std::endl;
-	std::cout << std::endl;
+}
+
+void	map_size_test(void) {
+	FT::map<char, int>	mapp;
+
+	mapp['w'] = 4;
+	mapp['x'] = 8;
+	mapp['y'] = 16;
+	mapp['z'] = 32;
+
+	std::cout << "Map.size = " << mapp.size() << std::endl;
+}
+
+void	map_max_size_test(void) {
+	FT::map<char, int>	mapp;
+
+	mapp['w'] = 4;
+	mapp['x'] = 8;
+	mapp['y'] = 16;
+	mapp['z'] = 32;
+
+	std::cout << "Map.max_size = " << mapp.max_size() << std::endl;
+}
+
+void	map_element_access_operator_test(void) {
+	ft::map<char, std::string>	mapp;
+
+	mapp['x'] = "pikachu";
+	mapp['y'] = "charmander";
+	mapp['z'] = mapp['y'];
+	std::cout << "[ " << mapp['x'] << " ]" << std::endl;
+	std::cout << "[ " << mapp['y'] << " ]" << std::endl;
+	std::cout << "[ " << mapp['z'] << " ]" << std::endl;
+	std::cout << "[ " << mapp['w'] << " ]" << std::endl;
+	std::cout << "Mapp contains : [ " << mapp.size() << " ] elements." << std::endl;
+}
+
+void	map_insert_test(void) {
+	FT::map<char, int>	mapp;
+
+	mapp.insert(FT::pair<char, int>('a', 100));
+	mapp.insert(FT::pair<char, int>('z', 200));
+
+	FT::pair<FT::map<char, int>::iterator, bool>	ret;
+	ret = mapp.insert(FT::pair<char, int>('z', 500));
+	if (ret.second == false) {
+		std::cout << "1. Element 'z' already existed with a value of " << ret.first->second
+			<< std::endl << std::endl;
+	}
+
+	FT::map<char, int>::iterator	it = mapp.begin();
+	mapp.insert(it, FT::pair<char, int>('b', 300));
+	mapp.insert(it, FT::pair<char, int>('c', 400));
+	std::cout << "2. Map size : " << mapp.size() << std::endl << std::endl;
+
+	FT::map<char, int>	mapp2;
+	mapp2.insert(mapp.begin(), mapp.find('c'));
+	std::cout << "3. Mapp contains :" << std::endl;
+	for (it = mapp.begin(); it != mapp.end(); it++)
+		std::cout << "[ " << it->first << " : " << it->second << " ]" << std::endl;
+	std::cout << std::endl << "   Mapp2 contains :" << std::endl;
+	for (it = mapp2.begin(); it != mapp2.end(); it++)
+		std::cout << "[ " << it->first << " : " << it->second << " ]" << std::endl;
+}
+
+void	map_erase_test(void) {
+	FT::map<char, int>				mapp;
+	FT::map<char, int>::iterator	it;
+
+	mapp['a'] = 4;
+	mapp['b'] = 8;
+	mapp['c'] = 16;
+	mapp['d'] = 32;
+	mapp['e'] = 64;
+	mapp['f'] = 128;
+
+	it = mapp.find('b');
+	mapp.erase(it);
+	mapp.erase('c');
+
+	std::cout << std::endl << "Mapp contains :" << std::endl;
+	for (it = mapp.begin(); it != mapp.end(); it++)
+		std::cout << "[ " << it->first << " : " << it->second << " ]" << std::endl;
+}
+
+void	map_swap_test(void) {
+	FT::map<char, int>	mapp, mapp2;
+
+	mapp['x'] = 100;
+	mapp['y'] = 200;
+	mapp2['a'] = 10;
+	mapp2['b'] = 11;
+	mapp2['c'] = 12;
+
+	mapp.swap(mapp2);
+	std::cout << std::endl << "Mapp contains :" << std::endl;
+	for (FT::map<char, int>::iterator it = mapp.begin(); it != mapp.end(); it++)
+		std::cout << "[ " << it->first << " : " << it->second << " ]" << std::endl;
+	std::cout << std::endl << "Mapp2 contains :" << std::endl;
+	for (FT::map<char, int>::iterator it = mapp2.begin(); it != mapp2.end(); it++)
+		std::cout << "[ " << it->first << " : " << it->second << " ]" << std::endl;
+}
+
+void	map_clear_test(void) {
+	FT::map<char, int>	mapp;
+
+	mapp['x'] = 100;
+	mapp['y'] = 200;
+	mapp['z'] = 300;
+
+	std::cout << "Mapp contains :" << std::endl;
+	for (FT::map<char, int>::iterator it = mapp.begin(); it != mapp.end(); it++)
+		std::cout << "[ " << it->first << " : " << it->second << " ]" << std::endl << std::endl;
+
+	mapp.clear();
+	mapp['a'] = 500;
+	mapp['b'] = 600;
+
+	std::cout << "Mapp contains :" << std::endl;
+	for (FT::map<char, int>::iterator it = mapp.begin(); it != mapp.end(); it++)
+		std::cout << "[ " << it->first << " : " << it->second << " ]" << std::endl;
+}
+
+void	map_key_comp_test(void) {
+	FT::map<char, int>	mapp;
+	FT::map<char, int>::key_compare	compp = mapp.key_comp();
+
+	mapp['x'] = 100;
+	mapp['y'] = 200;
+	mapp['z'] = 300;
+	std::cout << "Mapp contains :" << std::endl;
+	char	highest = mapp.rbegin()->first;
+	FT::map<char, int>::iterator it = mapp.begin();
+	do {
+		std::cout << "[ " << it->first << " : " << it->second << " ]" << std::endl;
+	} while (compp((*it++).first, highest));
+}
+
+void	map_value_comp_test(void) {
+	FT::map<char, int>	mapp;
+
+	mapp['x'] = 100;
+	mapp['y'] = 200;
+	mapp['z'] = 300;
+	std::cout << "Mapp contains :" << std::endl;
+	FT::pair<char, int>				highest = *mapp.rbegin();
+	FT::map<char, int>::iterator	it = mapp.begin();
+	do {
+		std::cout << "[ " << it->first << " : " << it->second << " ]" << std::endl;
+	} while (mapp.value_comp()(*it++, highest));
+}
+
+void	map_find_test(void) {
+	FT::map<char, int>				mapp;
+	FT::map<char, int>::iterator	it;
+
+	mapp['a'] = 100;
+	mapp['b'] = 200;
+	mapp['c'] = 300;
+	mapp['d'] = 400;
+	mapp['e'] = 500;
+	mapp['f'] = 600;
+	it = mapp.find('b');
+	if (it != mapp.end())
+		mapp.erase(it);
+	std::cout << "Mapp contains :" << std::endl;
+	for (it = mapp.begin(); it != mapp.end(); it++)
+		std::cout << "[ " << it->first << " : " << it->second << " ]" << std::endl;
+}
+
+void	map_count_test(void) {
+	FT::map<char, int>	mapp;
+
+	mapp['a'] = 100;
+	mapp['d'] = 200;
+	mapp['f'] = 300;
+	mapp['j'] = 400;
+	for (char c = 'a'; c < 'n'; c++) {
+		std::cout << c;
+		if (mapp.count(c) == 1)
+			std::cout << " is an element of mapp." << std::endl;
+		else
+			std::cout << " is not an element of mapp." << std::endl;
+	}
+}
+
+void	map_lower_upper_bound_test(void) {
+	FT::map<char, int>				mapp;
+
+	mapp['a'] = 100;
+	mapp['b'] = 200;
+	mapp['c'] = 300;
+	mapp['d'] = 400;
+	mapp['e'] = 500;
+	
+	FT::map<char, int>::iterator	lowit = mapp.lower_bound('b');
+	FT::map<char, int>::iterator	upit = mapp.upper_bound('d');
+	mapp.erase(lowit, upit);
+	std::cout << "Mapp contains :" << std::endl;
+	for (FT::map<char, int>::iterator it = mapp.begin(); it != mapp.end(); it++)
+		std::cout << "[ " << it->first << " : " << it->second << " ]" << std::endl;
+
+}
+
+void	map_equal_range_test(void) {
+	FT::map<char, int>	mapp;
+
+	mapp['a'] = 100;
+	mapp['b'] = 200;
+	mapp['c'] = 300;
+	mapp['d'] = 400;
+	mapp['e'] = 500;
+	mapp['f'] = 600;
+	FT::pair<FT::map<char, int>::iterator, FT::map<char, int>::iterator>	ret;
+	ret = mapp.equal_range('d');
+
+	std::cout << "Lower bound points to :" << std::endl;
+	std::cout << "[ " << ret.first->first << " : " << ret.first->second << " ]" << std::endl;
+	std::cout << "Upper bound points to :" << std::endl;
+	std::cout << "[ " << ret.second->first << " : " << ret.second->second << " ]" << std::endl;
+}
+
+void	map_get_allocator_test(void) {
+	int							psize;
+	FT::map<char, int>			mapp;
+	std::pair<const char, int>	*p;
+
+	p = mapp.get_allocator().allocate(5);
+	psize = sizeof(FT::map<char, int>::value_type) * 5;
+
+	std::cout << "The allocated array has a size of " << psize << " bytes." << std::endl;
+	mapp.get_allocator().deallocate(p, 5);
 }
 
 void	map_testing(void) {
@@ -128,20 +353,78 @@ void	map_testing(void) {
 	std::cout << std::endl;
 	map_rbegin_rend_test();
 
+	std::cout << std::endl;
+	std::cout << "\033[1;36m/* ******** Map Empty Test ***************** */\033[0m" << std::endl;
+	std::cout << std::endl;
+	map_empty_test();
 
+	std::cout << std::endl;
+	std::cout << "\033[1;36m/* ******** Map Size Test ****************** */\033[0m" << std::endl;
+	std::cout << std::endl;
+	map_size_test();
 
+	std::cout << std::endl;
+	std::cout << "\033[1;36m/* ******** Map Max_size Test ************** */\033[0m" << std::endl;
+	std::cout << std::endl;
+	map_max_size_test();
 
+	std::cout << std::endl;
+	std::cout << "\033[1;36m/* ******** Map Operator[] Test ************ */\033[0m" << std::endl;
+	std::cout << std::endl;
+	map_element_access_operator_test();
 
+	std::cout << std::endl;
+	std::cout << "\033[1;36m/* ******** Map Insert Test **************** */\033[0m" << std::endl;
+	std::cout << std::endl;
+	map_insert_test();
 
+	std::cout << std::endl;
+	std::cout << "\033[1;36m/* ******** Map Erase Test ***************** */\033[0m" << std::endl;
+	std::cout << std::endl;
+	map_erase_test();
 
+	std::cout << std::endl;
+	std::cout << "\033[1;36m/* ******** Map Swap Test ****************** */\033[0m" << std::endl;
+	std::cout << std::endl;
+	map_swap_test();
 
+	std::cout << std::endl;
+	std::cout << "\033[1;36m/* ******** Map Clear Test ***************** */\033[0m" << std::endl;
+	std::cout << std::endl;
+	map_clear_test();
 
+	std::cout << std::endl;
+	std::cout << "\033[1;36m/* ******** Map Key_comp Test ************** */\033[0m" << std::endl;
+	std::cout << std::endl;
+	map_key_comp_test();
 
+	std::cout << std::endl;
+	std::cout << "\033[1;36m/* ******** Map Value_comp Test ************** */\033[0m" << std::endl;
+	std::cout << std::endl;
+	map_value_comp_test();
 
+	std::cout << std::endl;
+	std::cout << "\033[1;36m/* ******** Map Find Test ****************** */\033[0m" << std::endl;
+	std::cout << std::endl;
+	map_find_test();
 
+	std::cout << std::endl;
+	std::cout << "\033[1;36m/* ******** Map Count Test ***************** */\033[0m" << std::endl;
+	std::cout << std::endl;
+	map_count_test();
 
+	std::cout << std::endl;
+	std::cout << "\033[1;36m/* ******** Map Lower/Upper_bond Test ****** */\033[0m" << std::endl;
+	std::cout << std::endl;
+	map_lower_upper_bound_test();
 
+	std::cout << std::endl;
+	std::cout << "\033[1;36m/* ******** Map Equal_range Test *********** */\033[0m" << std::endl;
+	std::cout << std::endl;
+	map_equal_range_test();
 
-
-
+	std::cout << std::endl;
+	std::cout << "\033[1;36m/* ******** Map Get_allocator Test *********** */\033[0m" << std::endl;
+	std::cout << std::endl;
+	map_get_allocator_test();
 }

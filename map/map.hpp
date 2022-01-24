@@ -6,7 +6,7 @@
 /*   By: namenega <namenega@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/15 22:02:18 by namenega          #+#    #+#             */
-/*   Updated: 2022/01/21 17:00:38 by namenega         ###   ########.fr       */
+/*   Updated: 2022/01/24 15:42:02 by namenega         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -194,9 +194,9 @@ namespace ft {
 			/* ************************** Empty() *************************** */
 			/*	Returns wether the map container is empty (i.e wether its size
 				is 0). This function doesn't modify the container in any way. */
-			// bool	empty() const {
-			// 	return (_rbt.getSize() == 0 ? true : false);
-			// }
+			bool	empty() const {
+				return (_rbt.getSize() == 0 ? true : false);
+			}
 
 			/* *************************** Size() *************************** */
 			/*	Returns the number of elements in the map container. */
@@ -211,9 +211,9 @@ namespace ft {
 				the container is by no means guarnteed to be able to reach that
 				size. It can still fail to allocate storage at any point before
 				that size is reached. */
-			// __SIZE_TYPE__	max_size() const {
-			// 	return (allocator_type().max_size());
-			// }
+			__SIZE_TYPE__	max_size() const {
+				return (allocator_type().max_size());
+			}
 
 
 			/* ************************************************************** */
@@ -287,7 +287,7 @@ namespace ft {
 				while (it != position)
 					it++;
 				if (it == position)
-					_rbt.deleteNode(it.base, it->first);
+					_rbt.deleteNode(it.base(), it->first);
 			}
 
 			__SIZE_TYPE__	erase(const key_type& key) {
@@ -312,9 +312,9 @@ namespace ft {
 				container are those which were in x before the call, and the 
 				elements of x are those which were in this. All iterators,
 				references and pointers remains valid for the swapped objects. */
-			// void	swap(map& x) {
-			// 	_rbt.swap(x._rbt)
-			// }
+			void	swap(map& x) {
+				_rbt.swap(x._rbt);
+			}
 
 			/* ************************** Clear() *************************** */
 			/*	Removes all elements from the map container (which are
@@ -340,9 +340,9 @@ namespace ft {
 				and returns 'true' if the first argument is considered to go
 				before the second in the strict weak ordering it defines, and
 				false otherwise. */
-			// key_compare	key_comp() const {
-			// 	return (_comp);
-			// }
+			key_compare	key_comp() const {
+				return (_comp);
+			}
 			
 			/* ************************ Value_comp() ************************ */
 			/*	Returns comparison object that can be used to compare two
@@ -370,30 +370,30 @@ namespace ft {
 				iterator to end().
 				Two keya are considered equivalent if the container's comparison
 				object returns false. */
-			// iterator	find(const key_type& k) {
-			// 	ft::Node<value_type>*	find;
+			iterator	find(const key_type& k) {
+				ft::Node<value_type>*	find;
 
-			// 	if ((find = _rbt.search(k)) == u_nullptr)
-			// 		find = _rbt.getEnd();
-			// 	return (iterator(find, _rbt.getEnd()));
-			// }
+				if ((find = _rbt.search(k)) == u_nullptr)
+					find = _rbt.getEnd();
+				return (iterator(find, _rbt.getEnd()));
+			}
 
-			// const_iterator	find(const key_type & k) const {
-			// 	ft::Node<value_type>*	find;
+			const_iterator	find(const key_type & k) const {
+				ft::Node<value_type>*	find;
 
-			// 	if ((find = _rbt.search(k)) == u_nullptr)
-			// 		find = _rbt.getEnd();
-			// 	return (iterator(find, _rbt.getEnd()));
-			// }
+				if ((find = _rbt.search(k)) == u_nullptr)
+					find = _rbt.getEnd();
+				return (iterator(find, _rbt.getEnd()));
+			}
 
 			/* ************************** Count() *************************** */
 			/*	Searches the container for elements with a key equivalent to k
 				and returns the number of matches.
 				Because all elements in a map container are unique, the function
 				can only return 1 (if the element is found) or 0. */
-			// __SIZE_TYPE__	count(const key_type & k) const {
-			// 	return (_rbt.search(k) == u_nullptr ? 0 : 1)
-			// }
+			__SIZE_TYPE__	count(const key_type & k) const {
+				return (_rbt.search(k) == u_nullptr ? 0 : 1);
+			}
 			
 			/* *********************** Lower_bound() ************************ */
 			/*	Returns an iterator pointing to the first element of the
@@ -401,29 +401,27 @@ namespace ft {
 				The function uses its internal comparison object (key_comp) to
 				determine this, returning an iterator to the first element for
 				which key_comp(element_key, k) would return false. */
-			// iterator	lower_bound(const key_type & k) {
-			// 	// iterator	it = begin();
+			iterator	lower_bound(const key_type & k) {
+				iterator	it = begin();
 
-			// 	// while (it != end()) {
-			// 	// 	if (_comp(it->first, k) == false)
-			// 	// 		break ;
-			// 	// 	it++;
-			// 	// }
+				while (it != end()) {
+					if (_comp(it->first, k) == false)
+						break ;
+					it++;
+				}
+				return (it);
+			}
 
-			// 	for (iterator it = begin(); it != end(); it++) {
-			// 		if (_comp(it->first, k) == false)
-			// 			break ;
-			// 	}
-			// 	return (it);
-			// }
+			const_iterator	lower_bound(const key_type & k) const {
+				iterator	it = begin();
 
-			// const_iterator	lower_bound(const key_type & k) const {
-			// 	for (iterator it = begin(); it != end(); it++) {
-			// 		if (_comp(it->first, k) == false)
-			// 			break ;
-			// 	}
-			// 	return (it);
-			// }
+				while (it != end()) {
+					if (_comp(it->first, k) == false)
+						break ;
+					it++;
+				}
+				return (it);
+			}
 
 			/* *********************** Upper_bound() ************************ */
 			/*	Returns an iterator pointing to the first element in the
@@ -431,21 +429,27 @@ namespace ft {
 				The function uses its internal comparison object (key_comp) to
 				determine this, returning an iterator to the first element for
 				which key_comp(element_key, k) would return true. */
-			// iterator	upper_bound(const key_type & k) {
-			// 	for (iterator it = begin(); it != end(); it++) {
-			// 		if (_comp(k, it->first) == true)
-			// 			break ;
-			// 	}
-			// 	return (it);
-			// }
+			iterator	upper_bound(const key_type & k) {
+				iterator	it = begin();
 
-			// const_iterator	upper_bound(const key_type & k) const {
-			// 	for (iterator it = begin(); it != end(); it++) {
-			// 		if (_comp(k, it->first) == true)
-			// 			break ;
-			// 	}
-			// 	return (it);
-			// }
+				while (it != end()) {
+					if (_comp(k, it->first) == true)
+						break ;
+					it++;
+				}
+				return (it);
+			}
+
+			const_iterator	upper_bound(const key_type & k) const {
+				const_iterator	it = begin();
+
+				while (it != end()) {
+					if (_comp(k, it->first) == true)
+						break ;
+					it++;
+				}
+				return (it);
+			}
 
 			/* *********************** Equal_range() ************************ */
 			/*	Returns the bounds of a range that includes all the elements in
@@ -456,13 +460,13 @@ namespace ft {
 				with both iterators pointing to the first element that has a key
 				considered to go after k according to the container's internal
 				comparison object (key_comp). */
-			// pair<iterator,iterator>	equal_range(const key_type & k) {
-			// 	return (ft::make_pair<iterator,iterator>(lower_bound(k),upper_bound(k)));
-			// }
+			pair<iterator,iterator>	equal_range(const key_type & k) {
+				return (ft::make_pair<iterator,iterator>(lower_bound(k),upper_bound(k)));
+			}
 
-			// pair<const_iterator,const_iterator>	equal_range(const key_type & k) const {
-			// 	return (ft::make_pair<const_iterator,const_iterator>(lower_bound(k),upper_bound(k)));
-			// }
+			pair<const_iterator,const_iterator>	equal_range(const key_type & k) const {
+				return (ft::make_pair<iterator,iterator>(lower_bound(k),upper_bound(k)));
+			}
 
 			/* ************************************************************** */
 			/* ************************** Allocator ************************* */

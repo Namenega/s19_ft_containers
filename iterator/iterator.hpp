@@ -6,7 +6,7 @@
 /*   By: namenega <namenega@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/29 12:57:28 by namenega          #+#    #+#             */
-/*   Updated: 2022/01/21 16:58:45 by namenega         ###   ########.fr       */
+/*   Updated: 2022/01/24 12:57:11 by namenega         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -111,8 +111,8 @@ namespace ft {
 			reverse_iterator(const reverse_iterator<Iter>& rev_it) : current(rev_it.base()) {
 			}
 			/*	Operator= */
-			template< class U >
-			reverse_iterator &	operator=(const reverse_iterator<U> & rev_it) {
+			template< class Iter >
+			reverse_iterator &	operator=(const reverse_iterator<Iter> & rev_it) {
 				if (this != &rev_it) {
 					this->current = rev_it.current;
 				}
@@ -197,12 +197,12 @@ namespace ft {
 	template< class Iterator >
 	bool	operator!=(const ft::reverse_iterator< Iterator >& lhs,
 					const ft::reverse_iterator< Iterator >& rhs) {
-		return (lhs.base() == rhs.base());
+		return (lhs.base() != rhs.base());
 	}
 	template< class Iterator, class Iterator2 >
 	bool	operator!=(const ft::reverse_iterator< Iterator >& lhs,
 					const ft::reverse_iterator< Iterator2 >& rhs) {
-		return (lhs.base() == rhs.base());
+		return (lhs.base() != rhs.base());
 	}
 	/*	Operator< */
 	template< class Iterator >

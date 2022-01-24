@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   vector_testing.cpp                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: namenega <namenega@student.42.fr>          +#+  +:+       +#+        */
+/*   By: namenega <namenega@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/11 11:15:34 by namenega          #+#    #+#             */
-/*   Updated: 2022/01/14 14:55:51 by namenega         ###   ########.fr       */
+/*   Updated: 2022/01/24 16:03:13 by namenega         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,18 +79,14 @@ void	vector_end_test(void) {
 
 void	vector_rbegin_test(void) {
 	FT::vector<int>	vec;	// 5 default constructor int.
-	vec.push_back(3);
+	vec.push_back(5);
 	vec.push_back(6);
-	vec.push_back(2);
+	vec.push_back(3);
 	vec.push_back(7);
-	int						i = 0;
-	
-	for (FT::vector<int>::reverse_iterator rit = vec.rbegin(); rit != vec.rend(); ++rit)
-		*rit = ++i;
 	
 	std::cout << "Vec contains :" << std::endl;
-	for (FT::vector<int>::iterator it = vec.begin(); it != vec.end(); it++)
-		std::cout << *it << ' ';
+	for (FT::vector<int>::reverse_iterator rit = vec.rbegin(); rit != vec.rend(); ++rit)
+		std::cout << *rit << " ";
 	std::cout << std::endl;
 }
 
@@ -100,14 +96,10 @@ void	vector_rend_test(void) {
 	vec.push_back(6);
 	vec.push_back(2);
 	vec.push_back(7);
-	int						i = 0;
-	
-	for (FT::vector<int>::reverse_iterator rit = vec.rbegin(); rit != vec.rend(); ++rit)
-		*rit = ++i;
 	
 	std::cout << "Vec contains :" << std::endl;
-	for (FT::vector<int>::iterator it = vec.begin(); it != vec.end(); it++)
-		std::cout << *it << ' ';
+	for (FT::vector<int>::reverse_iterator rit = vec.rbegin(); rit != vec.rend(); ++rit)
+		std::cout << *rit << " ";
 	std::cout << std::endl;
 }
 
