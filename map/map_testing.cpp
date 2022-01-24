@@ -12,7 +12,6 @@
 
 #include "map.hpp"
 #include <iostream>
-#include <map>
 
 #ifndef FT
  #define FT ft
@@ -324,7 +323,7 @@ void	map_equal_range_test(void) {
 void	map_get_allocator_test(void) {
 	int							psize;
 	FT::map<char, int>			mapp;
-	std::pair<const char, int>	*p;
+	FT::pair<const char, int>	*p;
 
 	p = mapp.get_allocator().allocate(5);
 	psize = sizeof(FT::map<char, int>::value_type) * 5;
