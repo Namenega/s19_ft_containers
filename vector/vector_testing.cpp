@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   vector_testing.cpp                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: namenega <namenega@student.s19.be>         +#+  +:+       +#+        */
+/*   By: namenega <namenega@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/11 11:15:34 by namenega          #+#    #+#             */
-/*   Updated: 2022/01/24 17:49:57 by namenega         ###   ########.fr       */
+/*   Updated: 2022/02/15 09:31:03 by namenega         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -505,12 +505,63 @@ void	vector_assign_test(void) {
 	std::cout << std::endl;
 }
 
+void	real_vector_assign_test(void) {
+	std::vector<int>				first;
+	std::vector<int>				second;
+	std::vector<int>				third;
+	std::vector<int>::iterator		it;
+	int								tab[] = {16, 4, 8};
+
+	first.assign(7, 100);
+	it = first.begin() + 1;
+	second.assign(it, first.end() - 1);
+	third.assign(tab, tab + 3);
+
+	std::cout << "Size of first	: " << int(first.size()) << std::endl;
+	std::cout << "Vec first contains :" << std::endl;
+	for (unsigned i = 0; i < first.size(); i++)
+		std::cout << first[i] << ' ';
+	std::cout << std::endl << std::endl;
+
+	std::cout << "Size of second	: " << int(second.size()) << std::endl;
+	std::cout << "Vec second contains :" << std::endl;
+	for (unsigned i = 0; i < second.size(); i++)
+		std::cout << second[i] << ' ';
+	std::cout << std::endl << std::endl;
+
+	std::cout << "Size of third	: " << int(third.size()) << std::endl;
+	std::cout << "Vec third contains :" << std::endl;
+	for (unsigned i = 0; i < third.size(); i++)
+		std::cout << third[i] << ' ';
+	std::cout << std::endl;
+}
+
 /* ************************************************************************** */
 
 void	vector_insert_test(void) {
 	FT::vector<int>::iterator	it;
 	FT::vector<int>				first(3, 100);
 	FT::vector<int>				second(2, 400);
+	int							array[] = {1, 2, 3};
+
+	it = first.begin();
+	it = first.insert(it, 200);
+	first.insert(it, 2, 300);
+
+	it = first.begin();
+	first.insert(it + 2, second.begin(), second.end());
+	first.insert(first.begin(), array, array + 3);
+
+	std::cout << "Vec first contains :" << std::endl;
+	for (it = first.begin(); it != first.end(); it++)
+		std::cout << *it << ' ';
+	std::cout << std::endl;
+}
+
+void	real_vector_insert_test(void) {
+	std::vector<int>::iterator	it;
+	std::vector<int>			first(3, 100);
+	std::vector<int>			second(2, 400);
 	int							array[] = {1, 2, 3};
 
 	it = first.begin();
@@ -873,11 +924,18 @@ void	vector_testing(void) {
 	vector_assign_test();
 
 	std::cout << std::endl;
+	std::cout << "\033[1;35mREAL\033[0m :" << std::endl;
+	real_vector_assign_test();
+
+	std::cout << std::endl;
 	std::cout << "\033[1;35m/* ******** Vector Insert Test ************* */\033[0m" << std::endl;
 	std::cout << std::endl;
 	std::cout << "\033[1;35mMINE\033[0m :" << std::endl;
 	vector_insert_test();
 
+	std::cout << std::endl;
+	std::cout << "\033[1;35mREAL\033[0m :" << std::endl;
+	real_vector_insert_test();
 
 	std::cout << std::endl;
 	std::cout << "\033[1;35m/* ******** Vector Erase Test ************** */\033[0m" << std::endl;
